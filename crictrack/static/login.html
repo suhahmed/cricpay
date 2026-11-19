@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#2b8452">
+<meta name="apple-mobile-web-app-title" content="cricpay">
+<title>cricpay · Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f8f0; --card:#ffffff; --line:#e2e9df; --line-2:#f1f6ee; --ink:#14201b; --ink-2:#56645c; --ink-3:#86938b;
+  --green:#1f7d4e; --green-soft:#e3f3e8; --green-text:#17794b; --danger:#c23b2e; --orange:#c46a17; --orange-soft:#fdf0e1;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;min-height:100%}
+body{color:var(--ink);font:14px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;
+  background-color:var(--bg);
+  background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' fill='none' stroke='%231e6b47' stroke-opacity='.075' stroke-width='2' stroke-linecap='round'><circle cx='48' cy='52' r='13'/><path d='M40 42c4 6 4 14 0 20M56 42c-4 6-4 14 0 20' stroke-dasharray='2 3'/><path d='M176 150v44M188 150v44M200 150v44M172 148h32'/><path d='M70 200l40-40M106 156l14-14 10 10-14 14z' stroke-linejoin='round'/><circle cx='212' cy='58' r='6'/></svg>"),
+    repeating-linear-gradient(90deg,#f4f9f1 0 90px,#eef6ea 90px 180px)}
+.wrap{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.turf{color:#fff;padding:48px 56px;display:flex;flex-direction:column;position:relative;overflow:hidden;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.06) 0 54px,rgba(255,255,255,0) 54px 108px),linear-gradient(160deg,#36985f,#22693f)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:24px;letter-spacing:-.03em}
+.logo svg{width:28px;height:28px}
+.turf h1{font-size:40px;line-height:1.1;letter-spacing:-.035em;margin:auto 0 12px;max-width:420px}
+.turf p{margin:0;font-size:16px;opacity:.9;max-width:400px}
+.turf ul{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:10px;font-size:14px;opacity:.95}
+.turf li{display:flex;gap:10px;align-items:center}
+.turf li span{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:12px;flex:none}
+.scene{position:absolute;right:-30px;bottom:-10px;width:420px;opacity:.9;pointer-events:none}
+.turf .foot{margin-top:auto;padding-top:40px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.side{display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.card{width:min(420px,100%);background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px rgba(20,60,35,.05),0 12px 40px rgba(20,60,35,.08);padding:28px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--line-2);border-radius:11px;padding:4px;margin-bottom:22px}
+.tabs button{border:0;background:none;border-radius:8px;padding:9px;font:600 14px Inter,system-ui;cursor:pointer;color:var(--ink-2)}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+h2{margin:0 0 4px;font-size:22px;letter-spacing:-.02em}
+.sub{margin:0 0 20px;color:var(--ink-2);font-size:13.5px}
+form{display:grid;gap:14px}
+label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+input{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
+input:focus{outline:2px solid var(--green);outline-offset:1px;border-color:var(--green)}
+.hint{font-size:12px;color:var(--ink-3);margin-top:5px}
+.btn{border:0;border-radius:10px;padding:12px 16px;font:600 15px Inter,system-ui;cursor:pointer;background:var(--green);color:#fff;margin-top:4px}
+.btn:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.6;cursor:default}
+.err{color:var(--danger);font-size:13px;min-height:1em}
+.note{border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.55}
+.note.ok{background:var(--green-soft);color:#0f5a35}
+.note.warn{background:var(--orange-soft);color:#8a4a10}
+.pin{letter-spacing:.35em;text-align:center;font-size:18px}
+.switch{text-align:center;font-size:13px;color:var(--ink-2);margin-top:16px}
+.switch button{border:0;background:none;color:var(--green-text);font-weight:600;cursor:pointer;font:inherit;padding:0}
+@media (max-width:860px){
+  .wrap{grid-template-columns:1fr}
+  .turf{padding:24px 20px 28px}
+  .turf h1{font-size:26px;margin:22px 0 6px}
+  .turf p{font-size:14px}
+  .turf ul,.scene,.turf .foot{display:none}
+  .side{padding:20px 16px 40px;align-items:flex-start}
+  .card{padding:22px 18px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="turf">
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" fill="#d64b3b"/><path d="M8.2 4.3c2.2 4.6 2.2 10.8 0 15.4M15.8 4.3c-2.2 4.6-2.2 10.8 0 15.4" stroke="#fff" stroke-width="1.3" stroke-dasharray="1.6 1.4" stroke-linecap="round"/></svg>cricpay</div>
+    <h1>Every match. Every rupee.</h1>
+    <p>Tournament fees, advances and organiser payments for the team, all in one place.</p>
+    <ul>
+      <li><span>✓</span>See what you've paid and what's due</li>
+      <li><span>✓</span>Match-by-match costs, worked out for you</li>
+      <li><span>✓</span>Only your captain can make changes</li>
+    </ul>
+    <svg class="scene" viewBox="0 0 420 220" fill="none" aria-hidden="true">
+      <ellipse cx="300" cy="260" rx="300" ry="150" fill="#fff" fill-opacity=".07"/>
+      <ellipse cx="300" cy="260" rx="260" ry="120" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>
+      <path d="M250 220l26-120h48l26 120z" fill="#e9dcb6" fill-opacity=".85"/>
+      <path d="M270 128h60M262 160h76" stroke="#fff" stroke-width="2.5"/>
+      <path d="M288 100v28M300 100v28M312 100v28" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      <path d="M284 98h14M302 98h14" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="372" cy="84" r="12" fill="#d64b3b"/><path d="M365 75c3 6 3 12 0 18M379 75c-3 6-3 12 0 18" stroke="#fff" stroke-width="1.3" stroke-dasharray="1.6 1.6"/>
+    </svg>
+    <div class="foot">Your team. All accounted for.</div>
+  </section>
+
+  <section class="side">
+    <div class="card">
+      <div class="tabs" id="tabs"><button class="on" data-t="in">Sign in</button><button data-t="up">Create account</button></div>
+
+      <!-- sign in -->
+      <div id="pIn">
+        <h2>Welcome back</h2>
+        <p class="sub">Sign in to see the team's payments.</p>
+        <form id="fIn" autocomplete="on">
+          <div><label for="iU">Username</label><input id="iU" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
+          <div><label for="iP">Password</label><input id="iP" type="password" autocomplete="current-password" required></div>
+          <div class="err" id="eIn"></div>
+          <button class="btn" id="bIn">Sign in</button>
+        </form>
+        <div class="switch">New to the team? <button type="button" data-t="up">Create an account</button></div>
+      </div>
+
+      <!-- register -->
+      <div id="pUp" hidden>
+        <h2 id="upTitle">Create an account</h2>
+        <p class="sub" id="upSub">Your captain adds you to your tournament, then you can see its payments.</p>
+        <div id="upDone" class="note ok" hidden></div>
+        <div id="upClosed" class="note warn" hidden>Sign-ups are closed right now. Ask the captain to create an account for you.</div>
+        <form id="fUp" autocomplete="on">
+          <div><label for="uN">Your name</label><input id="uN" autocomplete="name" placeholder="e.g. Suhail Ahmed" required></div>
+          <div><label for="uU">Username</label><input id="uU" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="e.g. suhail" required><div class="hint">3–30 characters: letters, numbers, dot, dash or underscore</div></div>
+          <div><label for="uP">Password</label><input id="uP" type="password" autocomplete="new-password" required><div class="hint">At least 6 characters</div></div>
+          <div><label for="uP2">Confirm password</label><input id="uP2" type="password" autocomplete="new-password" required></div>
+          <div id="noteWrap"><label for="uNote">Which team / tournament are you in?</label><input id="uNote" maxlength="80" placeholder="e.g. Driplomats, BRC E151"><div class="hint">Helps your captain find you and give you access.</div></div>
+          <div id="pinWrap" hidden><label for="uPin">Current edit PIN</label><input id="uPin" class="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="off"><div class="hint">Proves you're the organiser. Only needed for this first account.</div></div>
+          <div class="err" id="eUp"></div>
+          <button class="btn" id="bUp">Create account</button>
+        </form>
+        <div class="switch" id="upSwitch">Already have an account? <button type="button" data-t="in">Sign in</button></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+let ST = { setup: false, pin_set: false, allow_register: true };
+const next = (() => { try { const n = new URLSearchParams(location.search).get('next'); return n && n.startsWith('/') && !n.startsWith('//') ? n : '/'; } catch (e) { return '/'; } })();
+
+function tab(t) {
+  [...document.querySelectorAll('#tabs button')].forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  $('#pIn').hidden = t !== 'in'; $('#pUp').hidden = t !== 'up';
+  setTimeout(() => (t === 'in' ? $('#iU') : $('#uN')).focus(), 20);
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (b) { e.preventDefault(); tab(b.dataset.t); } });
+
+async function post(url, body) {
+  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-cricpay': '1' }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({ error: 'Server error' }));
+  if (!r.ok) throw new Error(j.error || 'Something went wrong');
+  return j;
+}
+
+$('#fIn').addEventListener('submit', async e => {
+  e.preventDefault(); $('#eIn').textContent = ''; $('#bIn').disabled = true;
+  try { await post('/api/auth/login', { username: $('#iU').value.trim(), password: $('#iP').value }); location.href = next; }
+  catch (err) { $('#eIn').textContent = err.message; $('#iP').select(); }
+  finally { $('#bIn').disabled = false; }
+});
+
+$('#fUp').addEventListener('submit', async e => {
+  e.preventDefault(); $('#eUp').textContent = '';
+  if ($('#uP').value !== $('#uP2').value) { $('#eUp').textContent = "The two passwords don't match"; return; }
+  $('#bUp').disabled = true;
+  try {
+    const j = await post('/api/auth/register', { name: $('#uN').value, username: $('#uU').value.trim(), password: $('#uP').value, setup_pin: $('#uPin').value, note: $('#uNote').value });
+    if (j.pending) { $('#fUp').hidden = true; $('#upDone').hidden = false; $('#upDone').textContent = j.message; $('#upSub').hidden = true; }
+    else location.href = '/';
+  } catch (err) { $('#eUp').textContent = err.message; }
+  finally { $('#bUp').disabled = false; }
+});
+
+fetch('/api/auth/state').then(r => r.json()).then(s => {
+  ST = s;
+  if (s.me) { location.href = next; return; }
+  if (s.setup) {
+    $('#tabs').hidden = true; tab('up');
+    $('#upTitle').textContent = 'Create the admin account';
+    $('#upSub').textContent = "No accounts exist yet. This first account becomes the admin: every tournament, all changes, and it manages everyone's access.";
+    $('#bUp').textContent = 'Create admin account'; $('#noteWrap').hidden = true;
+    $('#upSwitch').hidden = true;
+    $('#pinWrap').hidden = !s.pin_set;
+  } else if (!s.allow_register) {
+    $('#upClosed').hidden = false; $('#fUp').hidden = true;
+  }
+}).catch(() => {});
+})();
+</script>
+</body>
+</html>

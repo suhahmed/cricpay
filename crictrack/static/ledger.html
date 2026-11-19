@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#2b8452">
+<meta name="apple-mobile-web-app-title" content="cricpay">
+<title>cricpay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f8f0; --card:#ffffff; --line:#e2e9df; --line-2:#f1f6ee; --ink:#14201b; --ink-2:#56645c; --ink-3:#86938b;
+  --side:#2b8452; --side-2:rgba(255,255,255,.2); --side-ink:#eef8f1;
+  --green:#1f7d4e; --green-ink:#ffffff; --green-soft:#e3f3e8; --green-text:#17794b;
+  --orange:#c46a17; --orange-soft:#fdf0e1; --blue:#3b5bcc; --blue-soft:#e8edfb; --danger:#c23b2e;
+  --shadow:0 1px 2px rgba(20,60,35,.05),0 6px 20px rgba(20,60,35,.04);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%}
+body{color:var(--ink);font:14px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;
+  background-color:var(--bg);
+  background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' fill='none' stroke='%231e6b47' stroke-opacity='.075' stroke-width='2' stroke-linecap='round'><circle cx='48' cy='52' r='13'/><path d='M40 42c4 6 4 14 0 20M56 42c-4 6-4 14 0 20' stroke-dasharray='2 3'/><path d='M176 150v44M188 150v44M200 150v44M172 148h32'/><path d='M70 200l40-40M106 156l14-14 10 10-14 14z' stroke-linejoin='round'/><rect x='108' y='136' width='14' height='40' rx='4' transform='rotate(45 115 156)'/><circle cx='212' cy='58' r='6'/><path d='M150 80h30M150 86h18' stroke-opacity='.05'/></svg>"),
+    repeating-linear-gradient(90deg,#f4f9f1 0 90px,#eef6ea 90px 180px);
+  background-attachment:fixed}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+
+/* sidebar: fresh outfield green with mowing stripes */
+aside{color:var(--side-ink);padding:22px 12px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+  background-color:var(--side);
+  background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='120' viewBox='0 0 200 120' fill='none'><ellipse cx='100' cy='132' rx='150' ry='42' fill='%23ffffff' fill-opacity='.08'/><path d='M84 40v58M100 40v58M116 40v58' stroke='%23ffffff' stroke-opacity='.55' stroke-width='5' stroke-linecap='round'/><path d='M80 37h18M102 37h18' stroke='%23ffffff' stroke-opacity='.55' stroke-width='4' stroke-linecap='round'/><circle cx='152' cy='92' r='9' fill='%23d64b3b'/><path d='M147 85c2 4 2 10 0 14M157 85c-2 4-2 10 0 14' stroke='%23fff' stroke-width='1' stroke-dasharray='1.5 1.5'/></svg>"),
+    repeating-linear-gradient(180deg,rgba(255,255,255,.05) 0 46px,rgba(255,255,255,0) 46px 92px),
+    linear-gradient(180deg,#34945e,#257447);
+  background-repeat:no-repeat,repeat,no-repeat;background-position:center bottom 168px,0 0,0 0;background-size:200px 120px,auto,auto}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:19px;white-space:nowrap;letter-spacing:-.03em;color:#fff;padding:0 6px}
+.logo svg{width:22px;height:22px}
+.tag{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 6px 0;color:var(--side-ink);opacity:.9}
+nav{margin-top:34px;display:flex;flex-direction:column;gap:4px}
+.nav{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;color:var(--side-ink);text-decoration:none;font-weight:500;cursor:pointer;border:0;background:none;text-align:left;width:100%}
+.nav:hover{background:rgba(255,255,255,.1)}
+.nav.on{background:var(--side-2);color:#fff;box-shadow:inset 3px 0 0 #fff}
+.nav svg{width:16px;height:16px;opacity:.95;flex:none}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding:0 4px}
+.lock{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;border-radius:10px;padding:9px 12px;cursor:pointer;font-size:13px}
+.lock[hidden]{display:none}
+.chgpin{border:0;background:none;color:#fff;opacity:.85;font-size:12px;text-decoration:underline;cursor:pointer;text-align:left;padding:0 2px;margin-top:-4px}
+.chgpin[hidden]{display:none}
+.pinbig{letter-spacing:.35em;font-size:18px!important;text-align:center}
+.lock.on{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.18)}
+.motto{font-size:12px;letter-spacing:.06em;text-transform:uppercase;line-height:1.6;opacity:.9}
+.sync{font-size:11.5px;opacity:.85;display:flex;gap:6px;align-items:center}
+.sync i{width:7px;height:7px;border-radius:50%;background:#c8f5d9;display:inline-block}
+.sync.busy i{background:#ffd76a;animation:p 1s infinite}.sync.err i{background:#ffb4a8}
+@keyframes p{50%{opacity:.3}}
+
+@media (min-width:761px) and (max-height:820px){
+  aside{background-image:repeating-linear-gradient(180deg,rgba(255,255,255,.05) 0 46px,rgba(255,255,255,0) 46px 92px),linear-gradient(180deg,#34945e,#257447);background-size:auto;background-position:0 0}
+}
+/* main: pitch & stumps drawing behind the page header */
+main{padding:28px 44px 60px;min-width:0;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='640' height='230' viewBox='0 0 640 230' fill='none'><ellipse cx='520' cy='250' rx='520' ry='190' fill='%23dcefd9' fill-opacity='.55'/><ellipse cx='520' cy='250' rx='470' ry='160' stroke='%23ffffff' stroke-width='3' stroke-dasharray='2 9' stroke-linecap='round'/></svg>") no-repeat right -40px top -10px / 640px 230px}
+.crumb{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2)}
+.head{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;position:relative}
+.head:after{content:"";position:absolute;right:0;top:78px;width:320px;height:48px;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='48' viewBox='0 0 320 48' fill='none'><rect x='2' y='6' width='316' height='36' rx='18' fill='%23d7ecd3' fill-opacity='.7'/><rect x='34' y='13' width='252' height='22' rx='3' fill='%23eadfbf'/><path d='M58 13v22M262 13v22' stroke='%23ffffff' stroke-width='2'/><path d='M44 15v18M48 15v18M52 15v18M268 15v18M272 15v18M276 15v18' stroke='%23a0784a' stroke-width='2' stroke-linecap='round'/><path d='M70 24c40-14 80-14 120-2' stroke='%23d64b3b' stroke-opacity='.35' stroke-width='1.5' stroke-dasharray='3 4'/><circle cx='196' cy='23' r='7' fill='%23d64b3b'/><path d='M192 18c2 3 2 7 0 10M200 18c-2 3-2 7 0 10' stroke='%23fff' stroke-width='1' stroke-dasharray='1.4 1.4'/></svg>") no-repeat center/contain;pointer-events:none}
+.head h1{font-size:32px;font-weight:800;letter-spacing:-.035em;margin:6px 0 6px;line-height:1.15}
+.head p{margin:0;color:var(--ink-2);font-size:15px}
+.actions{margin-left:auto;display:flex;gap:8px;margin-top:22px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:9px;padding:10px 16px;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.6;cursor:default}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-top:38px}
+.kpi{background:var(--card) url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90' fill='none'><circle cx='45' cy='45' r='40' stroke='%23d64b3b' stroke-opacity='.10' stroke-width='3'/><path d='M30 9c10 22 10 50 0 72M60 9c-10 22-10 50 0 72' stroke='%23d64b3b' stroke-opacity='.13' stroke-width='2' stroke-dasharray='3 4'/></svg>") no-repeat right -22px top -22px / 90px 90px;border:1px solid var(--line);border-radius:14px;padding:22px 22px 20px;box-shadow:var(--shadow)}
+.kpi .l{font-size:13px;color:var(--ink-2)}
+.kpi .v{font-size:30px;font-weight:700;letter-spacing:-.03em;margin:10px 0 6px;font-variant-numeric:tabular-nums}
+.kpi .h{font-size:12px;color:var(--ink-2)}
+.kpi.g .v{color:var(--green-text)} .kpi.o .v{color:var(--orange)}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-top:30px;box-shadow:var(--shadow);overflow:hidden}
+.panel-h{display:flex;gap:12px;align-items:flex-start;padding:24px 26px 0}
+.panel-h h2{margin:0;font-size:18px;font-weight:700;letter-spacing:-.02em}
+.panel-h p{margin:4px 0 0;color:var(--ink-2);font-size:13px}
+.count{margin-left:auto;background:var(--green-soft);color:var(--green-text);font-size:11.5px;font-weight:600;border-radius:999px;padding:4px 10px;margin-top:4px}
+.filters{display:flex;gap:10px;padding:22px 26px}
+.search{flex:1;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:0 12px;background:var(--card)}
+.search input{border:0;outline:0;background:transparent;padding:11px 0;width:100%}
+.search svg{width:14px;height:14px;color:var(--ink-3)}
+select.f{border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:var(--card);min-width:150px}
+select.f.wide{min-width:236px}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+thead th{background:var(--line-2);font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);text-align:left;padding:15px 12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+thead th:first-child,tbody td:first-child{padding-left:26px}
+tbody td{padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:color-mix(in srgb,var(--line-2) 60%,transparent)}
+.who{display:flex;align-items:center;gap:12px}
+.av{width:34px;height:34px;border-radius:50%;background:var(--line-2);color:var(--green-text);display:grid;place-items:center;font-size:11.5px;font-weight:700;flex:none;border:1px solid var(--line)}
+.who b{display:block;font-weight:600;font-size:14px}
+.who small{color:var(--ink-3);font-size:11.5px}
+.paid{color:var(--green-text);font-weight:700}
+.out{color:var(--orange)}
+.badge{display:inline-block;font-size:11.5px;font-weight:500;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.badge.s{background:var(--green-soft);color:var(--green-text)}
+.badge.o{background:var(--orange-soft);color:var(--orange)}
+.badge.c{background:var(--blue-soft);color:var(--blue)}
+.addpay{border:0;background:none;color:var(--green-text);font-weight:600;cursor:pointer;padding:6px 4px;white-space:nowrap}
+.addpay:hover{text-decoration:underline}
+
+.mx{display:flex;align-items:center;gap:4px}
+.mx .n{min-width:34px;font-size:13px;color:var(--ink);margin-left:6px}
+.pill{width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink-3);font-size:10.5px;font-weight:700;cursor:pointer;padding:0;display:grid;place-items:center}
+.pill.yes{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.pill.no{background:var(--line-2);color:var(--ink-3)}
+.pill:hover:not(:disabled){transform:translateY(-1px);border-color:var(--green)}
+.pill:disabled{cursor:not-allowed;opacity:.55}
+.pill.busy{animation:p .8s infinite}
+.empty{padding:50px 20px;text-align:center;color:var(--ink-3)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:var(--ink-3)}
+.undo{border:1px solid var(--line);background:var(--card);border-radius:7px;padding:5px 10px;cursor:pointer;font-size:12.5px}
+.undo.confirm{background:var(--danger);border-color:var(--danger);color:#fff}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:0 26px 14px;color:var(--ink-3);font-size:12px;margin-top:-8px}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.legend .pill{width:16px;height:16px;font-size:8px;cursor:default}
+
+/* modal */
+dialog{border:0;border-radius:16px;padding:0;width:min(460px,calc(100% - 32px));background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(10,20,16,.45)}
+.dlg-h{padding:22px 24px 4px}
+.dlg-h h3{margin:0;font-size:19px;font-weight:700;letter-spacing:-.02em}
+.dlg-h p{margin:4px 0 0;color:var(--ink-2);font-size:13px}
+.dlg-b{padding:16px 24px;display:grid;gap:14px}
+.fld label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.fld input,.fld select,.fld textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:var(--card)}
+.fld textarea{resize:vertical;min-height:60px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.amt{position:relative}.amt span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+.amt input{padding-left:26px;font-size:16px;font-weight:600}
+.hint{font-size:12.5px;color:var(--ink-2);background:var(--line-2);border-radius:9px;padding:9px 12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.hint button{border:0;background:none;color:var(--green-text);font-weight:600;cursor:pointer;padding:0;margin-left:auto}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:13px}
+.seg button.on{background:var(--green-soft);border-color:var(--green);color:var(--green-text);font-weight:600}
+.dlg-f{display:flex;gap:8px;justify-content:flex-end;padding:8px 24px 22px}
+.err{color:var(--danger);font-size:12.5px;min-height:1em}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin-top:30px}
+.tcard{background:var(--card);border:1px solid var(--line);border-top:4px solid #e2d3a8;border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px}
+.tcard h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.02em}
+.tcard .sub{color:var(--ink-2);font-size:12.5px;margin-top:3px}
+.tstats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tstats div{background:var(--line-2);border-radius:10px;padding:8px 10px}
+.tstats b{display:block;font-size:15px;font-variant-numeric:tabular-nums}
+.tstats span{font-size:11px;color:var(--ink-3)}
+.prog{height:7px;border-radius:9px;background:var(--line-2);overflow:hidden}.prog i{display:block;height:100%;background:var(--green)}
+.tact{display:flex;gap:8px;flex-wrap:wrap}.tact .btn{padding:8px 12px;font-size:13px}
+.tcard.new{border-style:dashed;border-top-width:1px;border-top-color:var(--line);background:rgba(255,255,255,.5)!important;align-items:center;justify-content:center;text-align:center;color:var(--ink-2);cursor:pointer;min-height:220px;}
+.tcard.new:hover{border-color:var(--green);color:var(--green-text)}
+.tcard.new b{font-size:30px;line-height:1;color:var(--green-text)}
+dialog.wide{width:min(620px,calc(100% - 32px))}
+.dlg-b.scroll{max-height:min(62vh,640px);overflow:auto}
+.mrow{display:grid;grid-template-columns:70px 1fr 120px;gap:8px;align-items:center}
+.mrow .lbl{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.prow{display:grid;grid-template-columns:1fr 140px 32px;gap:8px;align-items:center}
+.prow input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;background:var(--card)}
+.prow .amt input{padding-left:26px}
+.xbtn{border:0;background:none;color:var(--ink-3);font-size:18px;cursor:pointer;padding:0}
+.linkbtn{border:0;background:none;color:var(--green-text);font-weight:600;cursor:pointer;padding:0;font-size:13px}
+.sugg{font-size:12px;color:var(--ink-3);margin-top:5px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media (max-width:560px){.row3{grid-template-columns:1fr 1fr}.mrow{grid-template-columns:56px 1fr 92px}.prow{grid-template-columns:1fr 104px 26px}.tstats{grid-template-columns:repeat(2,1fr)}}
+.advbtn{border:1px solid #f1c590;background:var(--orange-soft);color:var(--orange);border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.advbtn:hover{background:#fbe2c4}
+.muted{color:var(--ink-3)}
+.advline{display:flex;gap:6px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2)}
+.advline span{background:var(--line-2);border-radius:999px;padding:3px 10px}
+.advline b{color:var(--ink)}
+.chk{display:flex;gap:10px;align-items:center;background:var(--green-soft);border-radius:10px;padding:10px 12px;font-size:13px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--green);margin:0}
+.sect{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-top:4px}
+.money{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-top:22px;box-shadow:var(--shadow);padding:18px 22px}
+.money-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.money-h h2{margin:0;font-size:16px;font-weight:700;letter-spacing:-.02em}
+.money-h .sugg{margin:0}
+.money-h .btn{margin-left:auto;padding:8px 12px;font-size:13px}
+.mgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.mstat{background:var(--line-2);border-radius:12px;padding:10px 12px;min-width:0}
+.mstat span{display:block;font-size:11.5px;color:var(--ink-2)}
+.mstat b{display:block;font-size:19px;font-weight:700;letter-spacing:-.02em;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mstat small{display:block;font-size:11px;color:var(--ink-3);margin-top:1px}
+.mstat.org{background:#f8f0dc}.mstat.g b{color:var(--green-text)}.mstat.o b{color:var(--orange)}.mstat.r b{color:var(--danger)}
+.mbar{height:6px;border-radius:9px;background:#efe3c3;overflow:hidden;margin-top:12px}.mbar i{display:block;height:100%;background:#a8771c}
+.orgbox{background:#fbf5e6;border:1px solid #efe2bf;border-radius:12px;padding:10px 12px;display:grid;gap:6px;font-size:12.5px;color:var(--ink-2)}
+.orgbox .ln{display:flex;justify-content:space-between;gap:8px}
+.orgbox b{color:var(--ink);font-variant-numeric:tabular-nums}
+.orgbox .t{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a8771c}
+@media (max-width:1100px){.mgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.mgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.money{padding:14px}.mstat b{font-size:16px}}
+.acct{display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:left;width:100%}
+.acct:hover{background:rgba(255,255,255,.18)}
+.av2{width:30px;height:30px;border-radius:50%;background:#fff;color:#1f7d4e;display:grid;place-items:center;font-weight:800;font-size:12px;flex:none}
+.acct-t{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.acct-t b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acct-t small{font-size:11.5px;opacity:.85}
+.nbadge{margin-left:auto;background:#ffd76a;color:#5a3d00;border-radius:999px;font-size:11px;font-weight:700;padding:1px 7px}
+.robar{display:flex;gap:10px;align-items:center;background:var(--blue-soft);color:#2c3f86;border-radius:12px;padding:10px 14px;font-size:13px;margin-top:40px;position:relative;z-index:1}
+body.ro [data-pay], body.ro [data-addpl], body.ro [data-newtour], body.ro [data-editm], body.ro [data-payorg], body.ro .undo { display:none !important }
+.rolesel{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--card);font:inherit;font-size:13px}
+.ubadge{display:inline-block;font-size:11.5px;font-weight:600;border-radius:999px;padding:3px 9px}
+.ubadge.active{background:var(--green-soft);color:var(--green-text)}.ubadge.pending{background:#fff3cd;color:#8a6100}.ubadge.disabled{background:#f1f1f1;color:#777}
+.uact{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.uact .btn{padding:6px 10px;font-size:12.5px}
+.uact .btn.danger{color:var(--danger)}
+.switchrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:0 26px 18px}
+.tog{position:relative;width:44px;height:24px;flex:none}
+.tog input{opacity:0;width:0;height:0}
+.tog span{position:absolute;inset:0;background:#cfd8d2;border-radius:99px;cursor:pointer;transition:.2s}
+.tog span:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.tog input:checked+span{background:var(--green)}.tog input:checked+span:before{transform:translateX(20px)}
+@media (max-width:760px){.acct{width:auto;padding:5px 8px}.acct-t small{display:none}.acct-t b{max-width:110px}.switchrow{padding:0 16px 14px}}
+.tsel-wrap{position:relative;display:inline-flex;align-items:center;margin:6px 0 6px;max-width:100%}
+.tsel{appearance:none;-webkit-appearance:none;border:0;background:transparent;font:800 32px/1.15 Inter,system-ui;letter-spacing:-.035em;color:var(--ink);padding:0 34px 0 0;cursor:pointer;max-width:100%;text-overflow:ellipsis}
+.tsel:focus-visible{outline:2px solid var(--green);outline-offset:4px;border-radius:6px}
+.tsel-wrap svg{position:absolute;right:4px;width:22px;height:22px;pointer-events:none;color:var(--green-text)}
+.mshare{display:flex;flex-wrap:wrap;gap:6px;padding:0 26px 16px}
+.mshare .mrule{width:100%;font-size:12.5px;color:var(--ink-2);margin-bottom:2px}
+.mchip{background:var(--line-2);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--ink-2)}
+.mchip b{color:var(--ink)}
+.editamt{border:1px solid var(--line);background:var(--card);border-radius:6px;width:24px;height:24px;cursor:pointer;color:var(--green-text);font-size:13px;padding:0;margin-left:2px}
+.editamt:hover{border-color:var(--green)}
+.rbadge{display:inline-block;vertical-align:middle;font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px;margin-left:4px;letter-spacing:0}
+.rbadge.admin{background:#efe7fb;color:#6b3fb5}.rbadge.captain{background:var(--green-soft);color:var(--green-text)}.rbadge.player{background:var(--blue-soft);color:var(--blue)}
+.mrow.v2{grid-template-columns:62px minmax(0,1fr) 110px 76px}
+.mrow>*{min-width:0}
+.mrow input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;background:var(--card);font:inherit}
+.mrow .amt input{padding-left:24px}
+.mrow .shr{grid-column:2/-1;font-size:11.5px;color:var(--ink-3);margin-top:-4px}
+.acc-row{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line-2)}
+.acc-row:last-child{border-bottom:0}
+.acc-row b{font-weight:600;font-size:13.5px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.achip{font-size:11.5px;border-radius:999px;padding:3px 9px;background:var(--line-2);color:var(--ink-2);white-space:nowrap}
+.achip.captain{background:var(--green-soft);color:var(--green-text);font-weight:600}.achip.admin{background:#efe7fb;color:#6b3fb5;font-weight:600}
+@media (max-width:760px){.tsel{font-size:24px}.mshare{padding:0 16px 12px}.mrow.v2{grid-template-columns:48px 1fr 88px 64px}}
+.toast{position:fixed;right:24px;bottom:24px;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:10px;font-size:13.5px;opacity:0;transform:translateY(10px);transition:.25s;z-index:60;max-width:calc(100% - 48px)}
+.toast.show{opacity:1;transform:none}.toast.bad{background:var(--danger);color:#fff}
+
+@media (max-width:1100px){ .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} main{padding:24px 24px 60px} }
+@media (max-width:760px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  aside{background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 46px,rgba(255,255,255,0) 46px 92px),linear-gradient(180deg,#34945e,#257447);background-size:auto;background-position:0 0;position:sticky;top:0;height:auto;z-index:30;padding:12px 16px;flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px}
+  .logo{font-size:19px;padding:0}.tag,.motto,.sync{display:none}
+  nav{margin:0;flex-direction:row;overflow-x:auto;width:100%;order:3;gap:2px}
+  .nav{padding:8px 10px;font-size:13px;width:auto;white-space:nowrap}
+  .side-foot{margin:0 0 0 auto;padding:0}
+  .lock{padding:6px 10px;font-size:12px}
+  main{padding:20px 16px 60px;background-size:420px 150px;background-position:right -120px top -6px}
+  .head h1{font-size:26px}
+  .actions{margin:8px 0 0;width:100%;flex-wrap:wrap}.actions .btn{flex:1 1 40%;justify-content:center}
+  .head:after{display:none}
+  .kpis{gap:10px;margin-top:22px;grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{padding:14px}.kpi .v{font-size:21px}
+  .panel-h{padding:18px 16px 0}.filters{flex-direction:column;padding:16px}
+  select.f,select.f.wide{min-width:0;width:100%}
+  .legend{padding:0 16px 10px}
+  table.resp thead{display:none}
+  table.resp tbody tr{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  table.resp tbody td{padding:0!important;border:0;background:none!important}
+  table.resp td.c-who{grid-column:1/2}
+  table.resp td.c-st{grid-column:2/3;justify-self:end;align-self:center}
+  table.resp td.c-mx{grid-column:1/3}
+  table.resp td.c-num{font-size:13px;white-space:normal}
+  table.resp,table.resp tbody{display:block}
+  .panel{overflow:visible}
+  .mx{flex-wrap:wrap}
+  table.resp td.c-num:before{content:attr(data-l);display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+  table.resp td.c-act{grid-column:2/3;justify-self:end}
+  table.hist tbody tr{grid-template-columns:1fr auto}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" fill="#d64b3b"/><path d="M8.2 4.3c2.2 4.6 2.2 10.8 0 15.4M15.8 4.3c-2.2 4.6-2.2 10.8 0 15.4" stroke="#fff" stroke-width="1.3" stroke-dasharray="1.6 1.4" stroke-linecap="round"/></svg>cricpay</div>
+    <div class="tag">Cricket • Tournament payments</div>
+    <nav>
+      <button class="nav on" data-page="overview"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>Payment overview</button>
+      <button class="nav" data-page="tournaments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7"/></svg>Tournaments</button>
+      <button class="nav" data-page="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Payment history</button>
+      <button class="nav" data-page="team" id="navTeam" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.9.7 3.1 2.4 3.6 5.2"/></svg>Team &amp; access<span class="nbadge" id="pendBadge" hidden></span></button>
+      <a class="nav" href="/sheets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg>Sheet view</a>
+      <a class="nav" href="/download" id="navDl" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Download Excel</a>
+    </nav>
+    <div class="side-foot">
+      <button class="acct" id="acctBtn"><span class="av2" id="acctAv">?</span><span class="acct-t"><b id="acctName">Signed in</b><small id="acctRole"></small></span></button>
+      <div class="sync" id="sync"><i></i><span id="syncTxt">Connecting…</span></div>
+      <div class="motto">Every match. Every rupee.</div>
+    </div>
+  </aside>
+
+  <main id="main"><div class="empty">Loading…</div></main>
+</div>
+
+<dialog id="payDlg">
+  <form id="payForm" method="dialog" autocomplete="off">
+    <div class="dlg-h"><h3>Record payment</h3><p>Saved straight into the Excel file.</p></div>
+    <div class="dlg-b">
+      <div class="fld"><label for="pTour">Tournament</label><select id="pTour" required></select></div>
+      <div class="fld"><label for="pPlayer">Player</label><select id="pPlayer" required></select></div>
+      <div class="hint" id="pHint"></div>
+      <div class="row2">
+        <div class="fld"><label for="pAmt">Amount</label><div class="amt"><span>₹</span><input id="pAmt" inputmode="decimal" required placeholder="0"></div></div>
+        <div class="fld"><label for="pDate">Date</label><input id="pDate" type="date" required></div>
+      </div>
+      <div class="fld"><label>Payment for</label><div class="seg" id="pType">
+        <button type="button" data-v="Advance">Advance</button><button type="button" class="on" data-v="Match fees">Match fees</button><button type="button" data-v="Other">Other</button></div></div>
+      <div class="fld"><label>Mode</label><div class="seg" id="pMode">
+        <button type="button" class="on" data-v="UPI">UPI</button><button type="button" data-v="Cash">Cash</button>
+        <button type="button" data-v="Bank transfer">Bank transfer</button><button type="button" data-v="Other">Other</button></div></div>
+      <div class="fld"><label for="pNote">Note <span style="font-weight:400;color:var(--ink-3)">(optional)</span></label><textarea id="pNote" placeholder="e.g. snacks, ball money, paid on behalf of…"></textarea></div>
+      <div class="err" id="pErr"></div>
+    </div>
+    <div class="dlg-f"><button class="btn" type="button" id="pCancel">Cancel</button><button class="btn primary" id="pSave" type="submit">Save payment</button></div>
+  </form>
+</dialog>
+
+<dialog id="tourDlg" class="wide">
+  <form id="tourForm" method="dialog" autocomplete="off">
+    <div class="dlg-h"><h3>New tournament</h3><p>Creates a new sheet in the Excel file with all the formulas set up.</p></div>
+    <div class="dlg-b scroll">
+      <div class="fld"><label for="tSheet">Short name <span style="font-weight:400;color:var(--ink-3)">(team + tournament, becomes the sheet tab)</span></label><input id="tSheet" maxlength="31" required placeholder="e.g. Driplomats - Winter Cup"></div>
+      <div class="row2">
+        <div class="fld"><label for="tTitle">Tournament name</label><input id="tTitle" placeholder="e.g. Winter Cup 2026"></div>
+        <div class="fld"><label for="tGround">Ground</label><input id="tGround" placeholder="e.g. Gurukul, Aziz Nagar"></div>
+      </div>
+      <div class="row3">
+        <div class="fld"><label for="tFee">Tournament fee</label><div class="amt"><span>₹</span><input id="tFee" inputmode="numeric" required placeholder="42000"></div></div>
+        <div class="fld"><label for="tTeam">Squad size</label><input id="tTeam" inputmode="numeric" value="12"></div>
+        <div class="fld"><label for="tN">Matches</label><input id="tN" type="number" min="1" max="15" value="6" required></div>
+      </div>
+      <div class="row2">
+        <div class="fld"><label for="tTPM">Players per match</label><input id="tTPM" type="number" min="1" max="30" value="12"></div>
+        <div class="fld"><label for="tCost">Per player per match <span style="font-weight:400;color:var(--ink-3)">(calculated)</span></label><div class="amt"><span>₹</span><input id="tCost" readonly tabindex="-1" style="background:var(--line-2)"></div></div>
+      </div>
+      <div class="sugg" id="tSugg"></div>
+      <div class="row3">
+        <div class="fld"><label for="tAdv">Advance per player</label><div class="amt"><span>₹</span><input id="tAdv" inputmode="numeric" placeholder="3000"></div></div>
+        <div class="fld"><label for="tEMin">Expected cost from</label><div class="amt"><span>₹</span><input id="tEMin" inputmode="numeric" placeholder="3500"></div></div>
+        <div class="fld"><label for="tEMax">to</label><div class="amt"><span>₹</span><input id="tEMax" inputmode="numeric" placeholder="4000"></div></div>
+      </div>
+      <div class="fld"><label>Opponents <span style="font-weight:400;color:var(--ink-3)">(optional)</span></label><div id="tMatches" style="display:grid;gap:8px"></div></div>
+      <div class="err" id="tErr"></div>
+    </div>
+    <div class="dlg-f"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" id="tSave" type="submit">Create tournament</button></div>
+  </form>
+</dialog>
+
+<dialog id="plDlg" class="wide">
+  <form id="plForm" method="dialog" autocomplete="off">
+    <div class="dlg-h"><h3>Add players</h3><p>Each player gets a row on the tournament sheet. Anything already paid is logged as a payment.</p></div>
+    <div class="dlg-b scroll">
+      <div class="fld"><label for="plTour">Tournament</label><select id="plTour"></select><div class="sugg" id="plFree"></div></div>
+      <label class="chk" id="plAdvWrap"><input type="checkbox" id="plAdv" checked><span id="plAdvTxt"></span></label>
+      <div class="prow" style="margin-bottom:-6px"><span class="lbl" style="font-size:12.5px;font-weight:600;color:var(--ink-2)">Player name</span><span style="font-size:12.5px;font-weight:600;color:var(--ink-2)">Already paid ₹</span><span></span></div>
+      <div id="plRows" style="display:grid;gap:8px"></div>
+      <div><button type="button" class="linkbtn" id="plMore">+ Add another player</button></div>
+      <div class="row2">
+        <div class="fld"><label>Payment mode</label><div class="seg" id="plMode"><button type="button" class="on" data-v="UPI">UPI</button><button type="button" data-v="Cash">Cash</button><button type="button" data-v="Bank transfer">Bank</button></div></div>
+        <div class="fld"><label for="plDate">Payment date</label><input id="plDate" type="date"></div>
+      </div>
+      <datalist id="allNames"></datalist>
+      <div class="err" id="plErr"></div>
+    </div>
+    <div class="dlg-f"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" id="plSave" type="submit">Add players</button></div>
+  </form>
+</dialog>
+
+<dialog id="mDlg" class="wide">
+  <form id="mForm" method="dialog" autocomplete="off">
+    <div class="dlg-h"><h3>Tournament settings</h3><p id="mSub"></p></div>
+    <div class="dlg-b scroll">
+      <div class="sect">Advance &amp; expected cost per player</div>
+      <div class="row3">
+        <div class="fld"><label for="sAdv">Advance</label><div class="amt"><span>₹</span><input id="sAdv" inputmode="numeric" placeholder="3000"></div></div>
+        <div class="fld"><label for="sEMin">Expected from</label><div class="amt"><span>₹</span><input id="sEMin" inputmode="numeric" placeholder="3500"></div></div>
+        <div class="fld"><label for="sEMax">to</label><div class="amt"><span>₹</span><input id="sEMax" inputmode="numeric" placeholder="4000"></div></div>
+      </div>
+      <div class="sugg">Leave the advance empty if this tournament doesn't collect one. Saved in the tournament box on the sheet.</div>
+      <div class="sect" style="margin-top:6px">Organiser</div>
+      <div class="fld"><label for="sOrg">Total fee payable to the organiser</label><div class="amt"><span>₹</span><input id="sOrg" inputmode="numeric" placeholder="70000"></div><div class="sugg" id="sOrgNote"></div></div>
+      <div id="mWrap"><div class="sect" style="margin:8px 0 8px">Matches</div><div id="mRows" style="display:grid;gap:8px"></div></div>
+      <div class="err" id="mErr"></div>
+    </div>
+    <div class="dlg-f"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" id="mSave" type="submit">Save settings</button></div>
+  </form>
+</dialog>
+
+<dialog id="orgDlg">
+  <form id="orgForm" method="dialog" autocomplete="off">
+    <div class="dlg-h"><h3>Pay organiser</h3><p>Records money paid to the tournament organiser. Saved on the tournament sheet and the Organiser Payments sheet.</p></div>
+    <div class="dlg-b">
+      <div class="fld"><label for="oTour">Tournament</label><select id="oTour"></select></div>
+      <div class="hint" id="oHint"></div>
+      <div class="row2">
+        <div class="fld"><label for="oAmt">Amount</label><div class="amt"><span>₹</span><input id="oAmt" inputmode="decimal" placeholder="0"></div></div>
+        <div class="fld"><label for="oDate">Date</label><input id="oDate" type="date"></div>
+      </div>
+      <div class="fld"><label>Mode</label><div class="seg" id="oMode"><button type="button" class="on" data-v="UPI">UPI</button><button type="button" data-v="Cash">Cash</button><button type="button" data-v="Bank transfer">Bank transfer</button></div></div>
+      <div class="fld"><label for="oNote">Note <span style="font-weight:400;color:var(--ink-3)">(optional)</span></label><input id="oNote" placeholder="e.g. 2nd instalment, paid by Suhail"></div>
+      <div class="err" id="oErr"></div>
+    </div>
+    <div class="dlg-f"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit" id="oSave">Save</button></div>
+  </form>
+</dialog>
+
+
+<dialog id="acctDlg">
+  <form id="acctForm" method="dialog" autocomplete="off">
+    <div class="dlg-h"><h3 id="adName">Your account</h3><p id="adSub"></p></div>
+    <div class="dlg-b">
+      <div class="sect">Change password</div>
+      <div class="fld"><label for="adCur">Current password</label><input id="adCur" type="password" autocomplete="current-password"></div>
+      <div class="row2">
+        <div class="fld"><label for="adNew">New password</label><input id="adNew" type="password" autocomplete="new-password"></div>
+        <div class="fld"><label for="adNew2">Type it again</label><input id="adNew2" type="password" autocomplete="new-password"></div>
+      </div>
+      <div class="err" id="adErr"></div>
+    </div>
+    <div class="dlg-f"><button class="btn" type="button" id="adOut" style="margin-right:auto;color:var(--danger)">Sign out</button><button class="btn" type="button" data-close>Close</button><button class="btn primary" type="submit">Change password</button></div>
+  </form>
+</dialog>
+
+<dialog id="userDlg">
+  <form id="userForm" method="dialog" autocomplete="off">
+    <div class="dlg-h"><h3 id="udTitle">Add a team member</h3><p id="udSub">They can sign in straight away with these details.</p></div>
+    <div class="dlg-b">
+      <div id="udNew">
+        <div class="row2">
+          <div class="fld"><label for="udName">Name</label><input id="udName" placeholder="e.g. Ravi Kumar"></div>
+          <div class="fld"><label for="udUser">Username</label><input id="udUser" autocapitalize="none" spellcheck="false" placeholder="e.g. ravi"></div>
+        </div>
+        <div class="fld" style="margin-top:14px"><label>Access</label><div id="udAcc"></div></div>
+      </div>
+      <div class="fld"><label for="udPass">Password</label><div style="display:flex;gap:8px"><input id="udPass" autocomplete="new-password"><button type="button" class="btn" id="udGen">Generate</button></div><div class="sugg">Share it with them privately. They can change it after signing in.</div></div>
+      <div class="err" id="udErr"></div>
+    </div>
+    <div class="dlg-f"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit" id="udSave">Create account</button></div>
+  </form>
+</dialog>
+<dialog id="custDlg">
+  <form id="custForm" method="dialog" autocomplete="off">
+    <div class="dlg-h"><h3 id="cuTitle">Custom amount</h3><p>Replaces the match-based amount for this player only. Extras are still added on top.</p></div>
+    <div class="dlg-b">
+      <div class="hint" id="cuHint"></div>
+      <div class="fld"><label for="cuAmt">Custom amount for this tournament</label><div class="amt"><span>₹</span><input id="cuAmt" inputmode="numeric" placeholder="e.g. 2000"></div></div>
+      <div class="err" id="cuErr"></div>
+    </div>
+    <div class="dlg-f"><button class="btn" type="button" id="cuClear" style="margin-right:auto">Use match-based amount</button><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit">Save</button></div>
+  </form>
+</dialog>
+<dialog id="accDlg" class="wide">
+  <form id="accForm" method="dialog" autocomplete="off">
+    <div class="dlg-h"><h3 id="acTitle">Access</h3><p id="acSub"></p></div>
+    <div class="dlg-b scroll"><div id="acBody"></div><div class="err" id="acErr"></div></div>
+    <div class="dlg-f"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit" id="acSave">Save access</button></div>
+  </form>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const ss = { get: k => { try { return sessionStorage.getItem(k) } catch (e) { return null } }, set: (k, v) => { try { sessionStorage.setItem(k, v) } catch (e) {} }, del: k => { try { sessionStorage.removeItem(k) } catch (e) {} } };
+const nf = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 });
+const rs = n => '₹' + nf.format(Math.round(n || 0));
+const esc = s => String(s ?? '').replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+const initials = n => n.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+const key = e => e.sheet + '|' + e.row;
+
+let D = null, page = 'overview', pin = ss.get('pin') || '', busy = 0, afterUnlock = null;
+const F = { q: '', t: '', s: '' };
+
+function toast(m, bad) { const t = $('#toast'); t.textContent = m; t.className = 'toast show' + (bad ? ' bad' : ''); clearTimeout(t._h); t._h = setTimeout(() => t.className = 'toast', bad ? 4500 : 2200); }
+function sync(mode, txt) { $('#sync').className = 'sync ' + (mode || ''); $('#syncTxt').textContent = txt || `Synced with ${D.file} · ${D.saved_at}`; }
+const canEdit = () => !!(D && (D.is_admin || D.tournaments.some(t => t.can_edit)));   // can edit something
+const isCaptain = () => !!(D && D.can_manage);                                        // may manage access
+const canEditT = s => { const t = D && D.tournaments.find(x => x.sheet === s); return !!(t && t.can_edit); };
+const scopeEdit = () => F.t ? canEditT(F.t) : !!(D && D.is_admin);
+function ensureScope() {
+  const names = D.tournaments.map(t => t.sheet);
+  if (F.t && !names.includes(F.t)) F.t = '';
+  if (!F.t) {
+    let saved = null; try { saved = localStorage.getItem('ct_scope'); } catch (e) {}
+    if (D.is_admin && (F.allChosen || (saved === '*' && F.allChosen !== false))) { F.t = ''; return; }
+    F.t = saved && names.includes(saved) ? saved : (names[names.length - 1] || '');
+  }
+}
+function setScope(v) { F.t = v === '*' ? '' : v; F.allChosen = v === '*'; try { localStorage.setItem('ct_scope', v); } catch (e) {} }
+const tour = s => D.tournaments.find(t => t.sheet === s);
+const status = e => e.balance < 0 ? 'o' : e.balance > 0 ? 'c' : 's';
+const DEF = { advance: 3000, est_min: 3500, est_max: 4000 };
+const advOf = e => { const t = tour(e.sheet); return t && t.advance ? t.advance : 0; };
+const advPending = e => advOf(e) > 0 && e.paid < advOf(e);
+const advShort = e => Math.max(0, advOf(e) - e.paid);
+const num = v => +String(v || '').replace(/[,₹\s]/g, '') || 0;
+function expectMore(e) {
+  const t = tour(e.sheet); if (!t || !t.est_min) return '';
+  const a = Math.max(0, t.est_min - e.paid), b = Math.max(0, t.est_max - e.paid);
+  const range = t.est_min === t.est_max ? rs(t.est_min) : `${rs(t.est_min)}–${nf.format(t.est_max)}`;
+  return `Expected total ${range}` + (b ? ` → about ${a === b ? rs(a) : `${rs(a)}–${nf.format(b)}`} more` : ' → covered');
+}
+
+function filtered() {
+  const q = F.q.trim().toLowerCase();
+  return D.entries.filter(e => (!q || e.name.toLowerCase().includes(q) || e.sheet.toLowerCase().includes(q)) && (!F.t || e.sheet === F.t) && (!F.s || (F.s === 'a' ? advPending(e) : status(e) === F.s)));
+}
+
+/* ---------- overview ---------- */
+function kpis(list) {
+  const due = list.reduce((a, e) => a + e.due, 0), paid = list.reduce((a, e) => a + e.paid, 0);
+  const owe = list.filter(e => e.balance < 0), cred = list.filter(e => e.balance > 0);
+  return `<div class="kpis">
+    <div class="kpi"><div class="l">Total assessed</div><div class="v">${rs(due)}</div><div class="h">Across the filtered player entries</div></div>
+    <div class="kpi g"><div class="l">Total collected</div><div class="v">${rs(paid)}</div><div class="h">Imported balances + new payments</div></div>
+    <div class="kpi o"><div class="l">Outstanding</div><div class="v">${rs(owe.reduce((a, e) => a - e.balance, 0))}</div><div class="h">${owe.length} player entr${owe.length === 1 ? 'y' : 'ies'} to follow up</div></div>
+    <div class="kpi"><div class="l">Player credits</div><div class="v">${rs(cred.reduce((a, e) => a + e.balance, 0))}</div><div class="h">Overpayments kept separate</div></div>
+    ${advKpi(list)}
+  </div>`;
+}
+
+function money(tours) {
+  const r = { fee: 0, paid: 0, bal: 0, got: 0, owe: 0, n: 0, noFee: 0, toCollect: 0 };
+  tours.forEach(t => {
+    const es = D.entries.filter(e => e.sheet === t.sheet), got = es.reduce((a, e) => a + e.paid, 0);
+    r.got += got; r.owe += es.reduce((a, e) => a + (e.balance < 0 ? -e.balance : 0), 0);
+    if (t.org && t.org.exists && t.org.fee) { r.fee += t.org.fee; r.paid += t.org.paid; r.bal += Math.max(0, t.org.balance); r.toCollect += Math.max(0, t.org.fee - got); r.n++; } else r.noFee++;
+  });
+  r.hand = r.got - r.paid;
+  return r;
+}
+function moneyStrip() {
+  const tours = F.t ? [tour(F.t)].filter(Boolean) : D.tournaments, m = money(tours);
+  const pct = m.fee ? Math.min(100, Math.round(m.paid / m.fee * 100)) : 0;
+  const scope = F.t ? esc(F.t) : `All ${tours.length} tournaments`;
+  if (!m.n) return `<div class="money"><div class="money-h"><h2>Organiser &amp; kitty</h2><p class="sugg">${scope}: no organiser fee set yet</p>${F.t && canEditT(F.t) ? `<button class="btn" data-editm="${esc(F.t)}">Set organiser fee</button>` : ''}</div></div>`;
+  return `<div class="money">
+    <div class="money-h"><h2>Organiser &amp; kitty</h2><p class="sugg">${scope}${m.noFee ? ` · ${m.noFee} without an organiser fee` : ''}</p>${scopeEdit() ? `<button class="btn" data-payorg="${esc(F.t)}">+ Pay organiser</button>` : ''}</div>
+    <div class="mgrid">
+      <div class="mstat org"><span>Organiser fee</span><b>${rs(m.fee)}</b><small>total payable</small></div>
+      <div class="mstat org g"><span>Paid to organiser</span><b>${rs(m.paid)}</b><small>${pct}% of the fee</small></div>
+      <div class="mstat org ${m.bal > 0 ? 'o' : 'g'}"><span>Balance to organiser</span><b>${m.bal > 0 ? rs(m.bal) : '✓ ' + rs(0)}</b><small>${m.bal > 0 ? 'still to pay' : 'fully paid'}</small></div>
+      <div class="mstat g"><span>Collected from players</span><b>${rs(m.got)}</b><small>so far</small></div>
+      <div class="mstat ${m.toCollect ? 'o' : 'g'}"><span>Still to collect</span><b>${rs(m.toCollect)}</b><small>to cover the full fee</small></div>
+      <div class="mstat ${m.hand < 0 ? 'r' : 'g'}"><span>${m.hand < 0 ? 'Short (fronted)' : 'Kitty in hand'}</span><b>${rs(Math.abs(m.hand))}</b><small>${m.hand < 0 ? 'paid out more than collected' : 'collected − paid out'}</small></div>
+    </div>
+    <div class="mbar" title="${pct}% of the organiser fee paid"><i style="width:${pct}%"></i></div>
+  </div>`;
+}
+function advKpi(list) {
+  const w = list.filter(e => advOf(e));
+  if (!w.length) return `<div class="kpi"><div class="l">Advances</div><div class="v muted">—</div><div class="h">Set an advance in Tournaments → Settings</div></div>`;
+  const got = w.reduce((a, e) => a + Math.min(e.paid, advOf(e)), 0), pend = w.filter(advPending);
+  return `<div class="kpi g"><div class="l">Advances collected</div><div class="v">${rs(got)}</div><div class="h">${pend.length ? `<span style="color:var(--orange);font-weight:600">${pend.length} player${pend.length === 1 ? '' : 's'} yet to pay</span>` : 'Everyone has paid ✓'}</div></div>`;
+}
+function advCell(e) {
+  const a = advOf(e); if (!a) return '<span class="muted">—</span>';
+  if (!advPending(e)) return `<span class="badge s" title="Advance of ${rs(a)} paid">✓ ${rs(a)}</span>`;
+  if (!canEditT(e.sheet)) return `<span class="badge o">${rs(advShort(e))} due</span>`;
+  return `<button class="advbtn" data-adv="${key(e)}" title="Collect the remaining advance">Collect ${rs(advShort(e))}</button>`;
+}
+
+function rowHtml(e) {
+  const t = tour(e.sheet), st = status(e), n = e.played.filter(p => p.v === 'yes').length;
+  const pills = e.played.map((p, i) => {
+    const m = t.matches[i];
+    const share = m.pool ? ` · ₹${nf.format(m.cost)} each (${m.played} played)` : '';
+    const tip = `${m.title}: ${p.v === 'yes' ? 'Played' : p.v === 'no' ? 'Did not play' : 'Not marked'}${share}${p.editable && canEditT(e.sheet) ? ' · click to change' : ''}`;
+    return `<button class="pill ${p.v}" data-k="${key(e)}" data-col="${p.col}" ${p.editable && canEditT(e.sheet) ? '' : 'disabled'} title="${esc(tip)}" aria-label="${esc(tip)}">${p.v === 'yes' ? '✓' : (i + 1)}</button>`;
+  }).join('');
+  const badge = st === 's' ? '<span class="badge s">Settled</span>' : st === 'o' ? '<span class="badge o">Outstanding</span>' : `<span class="badge c">${rs(e.balance)} credit</span>`;
+  return `<tr>
+    <td class="c-who"><div class="who"><span class="av">${esc(initials(e.name))}</span><div><b>${esc(e.name)}</b><small>${F.t ? `${n} of ${e.played.length} matches` : esc(e.sheet)}</small></div></div></td>
+    <td class="c-mx"><div class="mx">${pills}<span class="n">${n} / ${e.played.length}</span></div></td>
+    <td class="c-num" data-l="Amount due">${rs(e.due)}${e.custom != null ? ` <span class="badge c" title="Custom amount. Match-based would be ${rs(e.base)}">custom</span>` : ''}${t.custom_ok && canEditT(e.sheet) ? ` <button class="editamt" data-custom="${key(e)}" title="Set a custom amount for ${esc(e.name)}" aria-label="Set a custom amount">✎</button>` : ''}</td>
+    <td class="c-num paid" data-l="Paid so far">${rs(e.paid)}</td>
+    <td class="c-num" data-l="Advance">${advCell(e)}</td>
+    <td class="c-num ${e.balance < 0 ? 'out' : ''}" data-l="Outstanding">${rs(e.balance < 0 ? -e.balance : 0)}</td>
+    <td class="c-st">${badge}</td>
+    <td class="c-act">${canEditT(e.sheet) ? `<button class="addpay" data-pay="${key(e)}">+ Payment</button>` : ''}</td>
+  </tr>`;
+}
+
+function scopeTitle() {
+  const opts = (D.is_admin ? `<option value="*" ${!F.t ? 'selected' : ''}>All tournaments</option>` : '') +
+    D.tournaments.map(t => `<option value="${esc(t.sheet)}" ${F.t === t.sheet ? 'selected' : ''}>${esc(t.sheet)}</option>`).join('');
+  if (D.tournaments.length < 2 && !D.is_admin) return `<h1>${esc(F.t)}</h1>`;
+  return `<label class="tsel-wrap" title="Switch tournament"><select class="tsel" id="tsel" aria-label="Tournament">${opts}</select><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></label>`;
+}
+function scopeSub() {
+  if (!F.t) return `Every tournament on the website (${D.tournaments.length}). Only admins can see this view.`;
+  const t = tour(F.t), g = (t.facts || []).find(f => /^ground/i.test(f.k));
+  const role = { admin: 'You are an admin', captain: 'You are the captain', player: 'You are a player (view only)' }[t.access] || '';
+  return [t.title, g && g.v, role].filter(Boolean).map(esc).join(' · ');
+}
+function shareChips() {
+  const t = F.t && tour(F.t); if (!t || !t.shared_cost) return '';
+  const m0 = t.matches[0] || {}, fee = (t.org || {}).fee;
+  const rule = fee ? `${rs(fee)} fee ÷ ${t.matches.length} matches = <b>${rs(m0.pool)} per match</b> ÷ ${m0.team} players = <b>${rs(m0.rate)} each</b>, shared by the players who actually play` : '<b>Set the tournament fee</b> (Tournaments → Settings) to work out the match costs';
+  return `<div class="mshare"><span class="mrule">${rule}</span>${t.matches.map((m, i) => `<span class="mchip" title="${esc(m.title)}: ${rs(m.pool)} ÷ ${m.played || 0} players"><b>M${i + 1}</b> ${m.played ? `${m.played} played · <b>${rs(m.cost)}</b> each` : 'not played yet'}</span>`).join('')}</div>`;
+}
+function renderOverview() {
+  if (!D.tournaments.length) {
+    $('#main').innerHTML = `<div class="head"><div><div class="crumb">Tournament payments</div><h1>Welcome, ${esc((D.me || {}).name || '')}</h1><p>You haven't been added to a tournament yet.</p></div></div>
+      <div class="panel"><div class="empty">Ask your captain to give you access to your tournament.${D.can_create ? '<br><br><button class="btn primary" data-newtour>+ New tournament</button>' : ''}</div></div>`;
+    return;
+  }
+  const list = filtered();
+  $('#main').innerHTML = `
+    <div class="head"><div><div class="crumb">${F.t ? 'Tournament payments / Overview' : 'All tournaments / Admin overview'}</div>${scopeTitle()}<p>${scopeSub()}</p></div>
+      <div class="actions"><button class="btn" id="csv">↓ Export CSV</button>${scopeEdit() ? `<button class="btn" data-addpl="${esc(F.t)}">+ Add players</button><button class="btn primary" data-pay="">+ Record payment</button>` : ''}</div></div>
+    ${scopeEdit() ? '' : `<div class="robar">👀 <span>You have <b>view-only</b> access to this tournament. Only its captain can record payments or make changes.</span></div>`}
+    <div id="kp">${kpis(list)}</div>
+    <div id="mny">${moneyStrip()}</div>
+    <div class="panel">
+      <div class="panel-h"><div><h2>Player payments</h2><p>A clear view of who's paid and what's pending.</p></div><span class="count" id="cnt">${list.length} entries</span></div>
+      <div class="filters">
+        <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4-4"/></svg><input id="q" placeholder="Search players…" value="${esc(F.q)}" aria-label="Search players"></label>
+        <select class="f" id="fs" aria-label="Status"><option value="">All statuses</option><option value="o" ${F.s === 'o' ? 'selected' : ''}>Outstanding</option><option value="s" ${F.s === 's' ? 'selected' : ''}>Settled</option><option value="c" ${F.s === 'c' ? 'selected' : ''}>Credit</option><option value="a" ${F.s === 'a' ? 'selected' : ''}>Advance pending</option></select>
+      </div>
+      <div class="legend"><span><span class="pill yes">✓</span>Played</span><span><span class="pill no">2</span>Didn't play</span><span><span class="pill">3</span>Not marked</span><span>${scopeEdit() ? 'Click a match box to switch Yes/No. Amounts update automatically.' : 'View only. Ask your captain to update payments.'}</span></div>
+      <div id="msh">${shareChips()}</div>
+      <table class="resp"><thead><tr><th>Player / Tournament</th><th>Matches</th><th>Amount due</th><th>Paid so far</th><th>Advance</th><th>Outstanding</th><th>Status</th><th></th></tr></thead>
+      <tbody id="tb">${list.map(rowHtml).join('') || '<tr><td colspan="8" class="empty">No players match these filters.</td></tr>'}</tbody></table>
+    </div>`;
+}
+function refreshTable() {
+  const list = filtered();
+  $('#tb').innerHTML = list.map(rowHtml).join('') || '<tr><td colspan="8" class="empty">No players match these filters.</td></tr>';
+  $('#kp').innerHTML = kpis(list); $('#mny').innerHTML = moneyStrip(); $('#cnt').textContent = list.length + ' entries';
+  if ($('#msh')) $('#msh').innerHTML = shareChips();
+}
+
+/* ---------- history ---------- */
+function renderHistory() {
+  const P = D.payments.filter(p => !F.t || p.sheet === F.t), OP = (D.org_payments || []).filter(p => !F.t || p.sheet === F.t), total = P.reduce((a, p) => a + p.amount, 0);
+  const month = new Date().toISOString().slice(0, 7), mt = P.filter(p => p.date.startsWith(month)).reduce((a, p) => a + p.amount, 0);
+  $('#main').innerHTML = `
+    <div class="head"><div><div class="crumb">${F.t ? esc(F.t) : 'All tournaments'} / History</div>${scopeTitle()}<p>Every payment recorded from this website, newest first. Each one is a row on the <b>Payments</b> sheet in Excel.</p></div>
+      <div class="actions">${scopeEdit() ? '<button class="btn primary" data-pay="">+ Record payment</button>' : ''}</div></div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">Payments recorded</div><div class="v">${P.length}</div><div class="h">via the website</div></div>
+      <div class="kpi g"><div class="l">Total received</div><div class="v">${rs(total)}</div><div class="h">all recorded payments</div></div>
+      <div class="kpi"><div class="l">This month</div><div class="v">${rs(mt)}</div><div class="h">${new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}</div></div>
+      <div class="kpi"><div class="l">Before the website</div><div class="v">${rs(D.entries.filter(e => !F.t || e.sheet === F.t).reduce((a, e) => a + e.paid, 0) - total)}</div><div class="h">imported from the sheets</div></div>
+    </div>
+    <div class="panel"><div class="panel-h"><div><h2>Recorded payments</h2><p>Undo removes the row and subtracts the amount from the player's sheet again.</p></div><span class="count">${P.length} payment${P.length === 1 ? '' : 's'}</span></div>
+      <div style="height:18px"></div>
+      ${P.length ? `<table class="resp hist"><thead><tr><th>Player / Tournament</th><th>Date</th><th>Amount</th><th>For</th><th>Mode</th><th>Note</th><th>Excel cell</th><th></th></tr></thead><tbody>
+      ${P.map(p => `<tr>
+        <td class="c-who"><div class="who"><span class="av">${esc(initials(p.player || '?'))}</span><div><b>${esc(p.player)}</b><small>${esc(p.sheet)}</small></div></div></td>
+        <td class="c-num" data-l="Date">${p.date ? new Date(p.date + 'T00:00').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}</td>
+        <td class="c-num paid" data-l="Amount">${rs(p.amount)}</td>
+        <td class="c-num" data-l="For">${p.type ? `<span class="badge ${p.type === 'Advance' ? 'c' : 's'}">${esc(p.type)}</span>` : '—'}</td>
+        <td class="c-num" data-l="Mode">${esc(p.mode || '—')}</td>
+        <td class="c-num" data-l="Note" style="white-space:normal;max-width:260px">${esc(p.note || '—')}</td>
+        <td class="c-num mono" data-l="Excel cell" title="Recorded ${esc(p.recorded)}${p.by ? ' by ' + esc(p.by) : ''}">${esc(p.cell)}${p.by ? `<div style="font-family:Inter,sans-serif;font-size:11px">by ${esc(p.by)}</div>` : ''}</td>
+        <td class="c-act">${canEditT(p.sheet) ? `<button class="undo" data-undo="${esc(p.id)}">Undo</button>` : ''}</td></tr>`).join('')}
+      </tbody></table>` : '<div class="empty">No payments recorded from the website yet.</div>'}
+    </div>
+    <div class="panel"><div class="panel-h"><div><h2>Payments to organiser</h2><p>Money paid out to tournament organisers. Each one is a row on the <b>Organiser Payments</b> sheet.</p></div><span class="count">${OP.length} payment${OP.length === 1 ? '' : 's'}</span></div>
+      <div style="height:18px"></div>
+      ${OP.length ? `<table class="resp hist"><thead><tr><th>Tournament</th><th>Date</th><th>Amount</th><th>Mode</th><th>Note</th><th>Excel cell</th><th></th></tr></thead><tbody>
+      ${OP.map(p => `<tr>
+        <td class="c-who"><div class="who"><span class="av" style="color:#a8771c">₹</span><div><b>${esc(p.sheet)}</b><small>to organiser</small></div></div></td>
+        <td class="c-num" data-l="Date">${p.date ? new Date(p.date + 'T00:00').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}</td>
+        <td class="c-num" data-l="Amount" style="font-weight:700;color:#a8771c">${rs(p.amount)}</td>
+        <td class="c-num" data-l="Mode">${esc(p.mode || '—')}</td>
+        <td class="c-num" data-l="Note" style="white-space:normal;max-width:260px">${esc(p.note || '—')}</td>
+        <td class="c-num mono" data-l="Excel cell" title="Recorded ${esc(p.recorded)}${p.by ? ' by ' + esc(p.by) : ''}">${esc(p.cell)}${p.by ? `<div style="font-family:Inter,sans-serif;font-size:11px">by ${esc(p.by)}</div>` : ''}</td>
+        <td class="c-act">${canEditT(p.sheet) ? `<button class="undo" data-undo="${esc(p.id)}">Undo</button>` : ''}</td></tr>`).join('')}
+      </tbody></table>` : '<div class="empty">No organiser payments recorded from the website yet.</div>'}
+    </div>`;
+}
+
+/* ---------- tournaments ---------- */
+function renderTournaments() {
+  const cards = D.tournaments.map(t => {
+    const es = D.entries.filter(e => e.sheet === t.sheet);
+    const due = es.reduce((a, e) => a + e.due, 0), paid = es.reduce((a, e) => a + e.paid, 0);
+    const owe = es.reduce((a, e) => a + (e.balance < 0 ? -e.balance : 0), 0);
+    const played = t.matches.filter((m, i) => es.some(e => e.played[i] && e.played[i].v === 'yes')).length;
+    const g = (t.facts || []).find(f => /^ground/i.test(f.k)), fee = (t.facts || []).find(f => /^fee/i.test(f.k));
+    const pct = due ? Math.min(100, Math.round(Math.min(paid, due) / due * 100)) : 0;
+    return `<div class="tcard">
+      <div><h3>${esc(t.sheet)} <span class="rbadge ${t.access}">${{ admin: '🛡️ Admin', captain: '🏏 Captain', player: '👀 Player' }[t.access] || ''}</span></h3><div class="sub">${esc([t.title, g && g.v].filter(Boolean).join(' · ') || ' ')}</div></div>
+      <div class="tstats"><div><b>${es.length}</b><span>players</span></div><div><b>${played}/${t.matches.length}</b><span>matches</span></div>
+        <div><b style="color:var(--green-text)">${rs(paid)}</b><span>collected</span></div><div><b style="color:var(--orange)">${rs(owe)}</b><span>outstanding</span></div></div>
+      ${t.shared_cost && t.matches[0] ? `<div class="advline"><span>${(t.org || {}).fee ? `${rs(t.org.fee)} ÷ ${t.matches.length} = <b>${rs(t.matches[0].pool)}</b> per match · <b>${rs(t.matches[0].rate)}</b> per player (${t.matches[0].team})` : 'Set the fee to work out match costs'}</span></div>` : ''}
+      <div class="advline">${t.advance ? `<span>Advance <b>${rs(t.advance)}</b> · ${es.filter(e => !advPending(e)).length}/${es.length} paid</span>` : '<span>No advance set</span>'}${t.est_min ? `<span>Expected <b>${t.est_min === t.est_max ? rs(t.est_min) : rs(t.est_min) + '–' + nf.format(t.est_max)}</b> per player</span>` : ''}</div>
+      ${(() => { const o = t.org || {}; if (!o.exists || !o.fee) return `<div class="orgbox"><div class="ln"><span class="t">Organiser</span><span>No organiser fee set</span></div></div>`;
+        const tc = Math.max(0, o.fee - paid), hand = paid - o.paid;
+        return `<div class="orgbox"><div class="ln"><span class="t">Organiser</span><span>fee <b>${rs(o.fee)}</b></span></div>
+          <div class="ln"><span>Paid <b style="color:var(--green-text)">${rs(o.paid)}</b></span><span>${o.balance > 0 ? `Balance <b style="color:var(--orange)">${rs(o.balance)}</b>` : '<b style="color:var(--green-text)">✓ Fully paid</b>'}</span></div>
+          <div class="ln"><span>Still to collect <b style="color:${tc ? 'var(--orange)' : 'var(--green-text)'}">${rs(tc)}</b></span><span>${hand < 0 ? `Short <b style="color:var(--danger)">${rs(-hand)}</b>` : `In hand <b>${rs(hand)}</b>`}</span></div></div>`; })()}
+      <div><div class="prog"><i style="width:${pct}%"></i></div><div class="sugg">${pct}% of ${rs(due)} assessed${fee ? ' · fee ' + esc(fee.v) : ''}</div></div>
+      <div class="tact"><button class="btn" data-view="${esc(t.sheet)}">View payments</button>${t.can_edit ? `<button class="btn" data-addpl="${esc(t.sheet)}">+ Add players</button>${t.org && t.org.exists && t.org.fee ? `<button class="btn" data-payorg="${esc(t.sheet)}">+ Pay organiser</button>` : ''}${t.has_info ? `<button class="btn" data-editm="${esc(t.sheet)}">Settings</button>` : ''}` : ''}</div>
+    </div>`;
+  }).join('');
+  $('#main').innerHTML = `
+    <div class="head"><div><div class="crumb">Tournament payments / Tournaments</div><h1>${D.is_admin ? 'All tournaments' : 'Your tournaments'}</h1><p>${D.is_admin ? 'Each tournament is a sheet in your Excel file.' : 'The tournaments you have access to.'}</p></div>
+      <div class="actions">${D.can_create ? '<button class="btn primary" data-newtour>+ New tournament</button>' : ''}</div></div>
+    <div class="tgrid">${cards}${D.can_create ? '<div class="tcard new" data-newtour role="button" tabindex="0"><b>+</b><div><strong>New tournament</strong><div class="sugg">Set matches and the per-player rate, then add players</div></div></div>' : ''}</div>`;
+}
+
+const today = () => new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+function openDlg(id) { $(id).showModal(); }
+document.querySelectorAll('dialog [data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+
+/* new tournament */
+function tMatchRows() {
+  const n = Math.max(1, Math.min(15, +$('#tN').value || 1));
+  const old = [...document.querySelectorAll('#tMatches .mrow')].map(r => ({ n: r.querySelector('.mn').value }));
+  $('#tMatches').innerHTML = Array.from({ length: n }, (_, i) => {
+    const o = old[i] || {};
+    return `<div class="mrow" style="grid-template-columns:70px minmax(0,1fr)"><span class="lbl">Match ${i + 1}</span><input class="mn" placeholder="vs opponent (optional)" value="${esc(o.n || '')}"></div>`;
+  }).join('');
+  const fee = num($('#tFee').value), tpm = +$('#tTPM').value || 12, per = fee ? fee / n : 0;
+  $('#tCost').value = per ? Math.round(per / tpm) : '';
+  $('#tSugg').innerHTML = '';
+}
+function openNewTour() {
+  needPin(() => {
+    ['#tSheet', '#tTitle', '#tGround', '#tFee'].forEach(x => $(x).value = ''); $('#tTPM').value = 12; $('#tTeam').value = 12; $('#tN').value = 6; $('#tErr').textContent = '';
+    $('#tAdv').value = DEF.advance; $('#tEMin').value = DEF.est_min; $('#tEMax').value = DEF.est_max;
+    $('#tMatches').innerHTML = ''; tMatchRows(); openDlg('#tourDlg'); setTimeout(() => $('#tSheet').focus(), 30);
+  });
+}
+['#tN', '#tFee', '#tTeam', '#tEMin', '#tEMax', '#tTPM'].forEach(x => $(x).addEventListener('input', tMatchRows));
+
+$('#tMatches').addEventListener('input', ev => { if (ev.target.classList.contains('mc')) ev.target.dataset.t = '1'; });
+$('#tourForm').addEventListener('submit', async ev => {
+  ev.preventDefault(); $('#tErr').textContent = '';
+  const rows = [...document.querySelectorAll('#tMatches .mrow')];
+  const body = { sheet: $('#tSheet').value, title: $('#tTitle').value, ground: $('#tGround').value, fee: $('#tFee').value, team_size: $('#tTeam').value,
+    matches: rows.length, team: $('#tTPM').value, advance: $('#tAdv').value, est_min: $('#tEMin').value, est_max: $('#tEMax').value, match_names: rows.map(r => r.querySelector('.mn').value) };
+  if (!num(body.fee)) { $('#tErr').textContent = 'Enter the tournament fee (e.g. 42000): match costs are worked out from it.'; return; }
+  $('#tSave').disabled = true; $('#tSave').textContent = 'Creating…';
+  try {
+    const j = await api('POST', '/api/tournaments', body);
+    $('#tourDlg').close(); page = 'tournaments'; render(); toast(j.message);
+    openAddPlayers(j.created);
+  } catch (err) { $('#tErr').textContent = err.message; }
+  finally { $('#tSave').disabled = false; $('#tSave').textContent = 'Create tournament'; }
+});
+
+/* add players */
+let plMode = 'UPI';
+function plRow(v = {}) {
+  const d = document.createElement('div'); d.className = 'prow';
+  const t = tour($('#plTour').value), adv = t && t.advance && $('#plAdv').checked ? t.advance : '';
+  d.innerHTML = `<input class="pn" list="allNames" placeholder="Player name" value="${esc(v.name || '')}"><div class="amt"><span>₹</span><input class="pp" inputmode="numeric" placeholder="0" value="${esc(v.paid ?? adv)}"></div><button type="button" class="xbtn" title="Remove">×</button>`;
+  $('#plRows').appendChild(d); return d;
+}
+function plAdvSync(prev) {
+  const t = tour($('#plTour').value), adv = t && t.advance;
+  $('#plAdvWrap').hidden = !adv;
+  if (adv) $('#plAdvTxt').innerHTML = `Each player below has paid the <b>${rs(adv)}</b> advance <span class="muted">(change any amount if not)</span>`;
+  document.querySelectorAll('#plRows .pp').forEach(i => {
+    const v = num(i.value);
+    if (adv && $('#plAdv').checked) { if (!i.value || v === prev) i.value = adv; }
+    else if (v === (prev || adv)) i.value = '';
+  });
+}
+function plFree() {
+  const t = tour($('#plTour').value); if (!t) return;
+  $('#plFree').textContent = `${t.free_slots} empty player row${t.free_slots === 1 ? '' : 's'} left on this sheet`;
+}
+function openAddPlayers(sheet) {
+  needPin(() => {
+    const ed = D.tournaments.filter(t => t.can_edit);
+    const s = [sheet, F.t].find(x => x && canEditT(x)) || (ed[ed.length - 1] || {}).sheet;
+    $('#plTour').innerHTML = ed.map(t => `<option value="${esc(t.sheet)}" ${t.sheet === s ? 'selected' : ''}>${esc(t.sheet)}</option>`).join('');
+    $('#allNames').innerHTML = [...new Set(D.entries.map(e => e.name))].sort().map(n => `<option value="${esc(n)}">`).join('');
+    $('#plAdv').checked = true; $('#plRows').innerHTML = ''; plAdvSync(); for (let i = 0; i < 3; i++) plRow();
+    $('#plDate').value = today(); $('#plErr').textContent = ''; plFree();
+    openDlg('#plDlg'); setTimeout(() => $('#plRows .pn').focus(), 30);
+  });
+}
+let plPrevAdv = 0;
+$('#plTour').addEventListener('focus', () => { const t = tour($('#plTour').value); plPrevAdv = t ? t.advance : 0; });
+$('#plTour').addEventListener('change', () => { plFree(); plAdvSync(plPrevAdv); });
+$('#plAdv').addEventListener('change', () => plAdvSync());
+$('#plMore').addEventListener('click', () => plRow().querySelector('.pn').focus());
+$('#plRows').addEventListener('click', ev => { if (ev.target.classList.contains('xbtn')) { ev.target.closest('.prow').remove(); if (!$('#plRows').children.length) plRow(); } });
+$('#plRows').addEventListener('keydown', ev => {
+  if (ev.key === 'Enter' && ev.target.classList.contains('pn')) { ev.preventDefault(); const r = ev.target.closest('.prow'); (r.nextElementSibling || plRow()).querySelector('.pn').focus(); }
+});
+$('#plMode').addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; plMode = b.dataset.v; [...$('#plMode').children].forEach(x => x.classList.toggle('on', x === b)); });
+$('#plForm').addEventListener('submit', async ev => {
+  ev.preventDefault(); $('#plErr').textContent = '';
+  const players = [...document.querySelectorAll('#plRows .prow')].map(r => ({ name: r.querySelector('.pn').value.trim(), paid: r.querySelector('.pp').value.replace(/[,₹\s]/g, ''), mode: plMode, date: $('#plDate').value, type: (tour($('#plTour').value) || {}).advance && $('#plAdv').checked ? 'Advance' : 'Other' })).filter(x => x.name);
+  if (!players.length) { $('#plErr').textContent = 'Type at least one player name'; return; }
+  const bad = players.find(x => x.paid && !/^\d+(\.\d+)?$/.test(x.paid)); if (bad) { $('#plErr').textContent = `Check the amount for ${bad.name}`; return; }
+  $('#plSave').disabled = true;
+  try {
+    const sheet = $('#plTour').value;
+    const j = await api('POST', '/api/players', { sheet, players });
+    $('#plDlg').close(); F.t = sheet; F.q = ''; F.s = ''; page = 'overview'; render(); toast(j.message + ' · tap the match boxes to mark who played');
+  } catch (err) { $('#plErr').textContent = err.message; }
+  finally { $('#plSave').disabled = false; }
+});
+
+/* edit matches */
+let mSheet = null;
+function openEditMatches(sheet) {
+  needPin(() => {
+    const t = tour(sheet); mSheet = sheet; $('#mErr').textContent = '';
+    $('#mSub').textContent = t.editable_matches ? `${sheet}: advance, expected cost, organiser fee and match costs. Each match costs rate × players, split among those who played; everyone is re-charged automatically.` : `${sheet}: advance and expected cost per player. Match costs on this older sheet are built into its formulas.`;
+    $('#sAdv').value = t.advance || ''; $('#sEMin').value = t.est_min || ''; $('#sEMax').value = t.est_max || '';
+    $('#mWrap').hidden = !t.editable_matches;
+    const o = t.org || {};
+    $('#sOrg').value = o.fee || ''; $('#sOrg').disabled = o.exists && !o.fee_editable;
+    $('#sOrgNote').textContent = !o.exists ? 'An organiser section (fee, payments, balance) will be added to the sheet.' : o.fee_editable ? `Stored in cell ${o.fee_ref} on the sheet.` : `Calculated by a formula in ${o.fee_ref}; change it in Excel.`;
+    $('#mRows').innerHTML = `<div class="mrow v2" style="font-size:11.5px;color:var(--ink-3);font-weight:600"><span></span><span>Opponent</span><span>Per player</span><span>Players</span></div>` +
+      t.matches.map((m, i) => `<div class="mrow v2" data-col="${m.col}"><span class="lbl">Match ${i + 1}</span><input class="mn" placeholder="vs opponent (optional)" value="${esc(m.label || '')}"><div class="amt"><span>₹</span><input class="mc" readonly tabindex="-1" style="background:var(--line-2)" value="${esc(m.rate ?? '')}" title="Fee ÷ matches ÷ players (calculated)"></div><input class="mt" type="number" min="1" max="30" value="${esc(m.team ?? 12)}"><div class="shr">${rs(m.pool)} per match (fee ÷ ${t.matches.length}) · ${m.played ? `${m.played} played → ${rs(m.cost)} each` : 'not played yet'}</div></div>`).join('');
+    openDlg('#mDlg');
+  });
+}
+$('#mForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const matches = [...document.querySelectorAll('#mRows .mrow[data-col]')].map(r => ({ col: r.dataset.col, label: r.querySelector('.mn').value, team: r.querySelector('.mt').value }));
+  $('#mSave').disabled = true;
+  try {
+    let j = await api('POST', '/api/tournaments/settings', { sheet: mSheet, advance: $('#sAdv').value, est_min: $('#sEMin').value, est_max: $('#sEMax').value, ...($('#sOrg').disabled ? {} : { org_fee: $('#sOrg').value }) });
+    if (tour(mSheet).editable_matches) j = await api('POST', '/api/tournaments/matches', { sheet: mSheet, matches });
+    $('#mDlg').close(); render(); toast(`Settings saved for ${mSheet}`);
+  }
+  catch (err) { $('#mErr').textContent = err.message; }
+  finally { $('#mSave').disabled = false; }
+});
+
+/* custom amount */
+let cuKey = null;
+function openCustom(k) {
+  const [sheet, row] = k.split('|'), e = D.entries.find(x => x.sheet === sheet && x.row == row); if (!e) return;
+  cuKey = k; $('#cuTitle').textContent = `Custom amount · ${e.name}`; $('#cuErr').textContent = '';
+  const n = e.played.filter(p => p.v === 'yes').length;
+  $('#cuHint').innerHTML = `<span>Match-based <b>${rs(e.base)}</b> (${n} match${n === 1 ? '' : 'es'} played)</span><span>Now charged <b>${rs(e.due)}</b></span>${e.custom != null ? '<span class="badge c">custom</span>' : ''}`;
+  $('#cuAmt').value = e.custom != null ? e.custom : ''; $('#cuClear').hidden = e.custom == null;
+  $('#custDlg').showModal(); setTimeout(() => $('#cuAmt').focus(), 30);
+}
+async function saveCustom(v) {
+  const [sheet, row] = cuKey.split('|');
+  try { const j = await api('POST', '/api/custom', { sheet, row: +row, amount: v }); $('#custDlg').close(); refreshTable(); toast(j.message); }
+  catch (err) { $('#cuErr').textContent = err.message; }
+}
+$('#custForm').addEventListener('submit', ev => { ev.preventDefault(); const v = $('#cuAmt').value.replace(/[,₹\s]/g, ''); if (!/^\d+(\.\d+)?$/.test(v)) { $('#cuErr').textContent = 'Enter an amount, e.g. 2000'; return; } saveCustom(v); });
+$('#cuClear').addEventListener('click', () => saveCustom(''));
+
+/* pay organiser */
+let oMode = 'UPI';
+function oHint() {
+  const t = tour($('#oTour').value); if (!t) return;
+  const o = t.org || {}, got = D.entries.filter(e => e.sheet === t.sheet).reduce((a, e) => a + e.paid, 0);
+  $('#oHint').innerHTML = `<span>Fee <b>${rs(o.fee)}</b></span><span>Paid <b>${rs(o.paid)}</b></span><span>Balance <b style="color:${o.balance > 0 ? 'var(--orange)' : 'var(--green-text)'}">${rs(o.balance)}</b></span>` +
+    (o.balance > 0 ? `<button type="button" id="oFull">Fill ${rs(o.balance)}</button>` : '') +
+    `<span style="flex-basis:100%">Collected from players ${rs(got)} · ${got - o.paid >= 0 ? `in hand ${rs(got - o.paid)}` : `short ${rs(o.paid - got)}`}</span>`;
+}
+function openPayOrg(sheet) {
+  needPin(() => {
+    const list = D.tournaments.filter(t => t.can_edit && t.org && t.org.exists && t.org.fee);
+    if (!list.length) { toast('Set an organiser fee first: Tournaments → Settings', true); return; }
+    const s = list.find(t => t.sheet === sheet) ? sheet : (list.find(t => t.org.balance > 0) || list[0]).sheet;
+    $('#oTour').innerHTML = list.map(t => `<option value="${esc(t.sheet)}" ${t.sheet === s ? 'selected' : ''}>${esc(t.sheet)}${t.org.balance > 0 ? ` (balance ${rs(t.org.balance)})` : ' ✓'}</option>`).join('');
+    $('#oAmt').value = ''; $('#oNote').value = ''; $('#oErr').textContent = ''; $('#oDate').value = today(); oHint();
+    $('#orgDlg').showModal(); setTimeout(() => $('#oAmt').focus(), 30);
+  });
+}
+$('#oTour').addEventListener('change', oHint);
+$('#oHint').addEventListener('click', ev => { if (ev.target.id === 'oFull') $('#oAmt').value = tour($('#oTour').value).org.balance; });
+$('#oMode').addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; oMode = b.dataset.v; [...$('#oMode').children].forEach(x => x.classList.toggle('on', x === b)); });
+$('#orgForm').addEventListener('submit', async ev => {
+  ev.preventDefault(); $('#oErr').textContent = '';
+  const amt = $('#oAmt').value.replace(/[,₹\s]/g, '');
+  if (!/^\d+(\.\d+)?$/.test(amt) || +amt === 0) { $('#oErr').textContent = 'Enter an amount, e.g. 20000'; return; }
+  $('#oSave').disabled = true;
+  try { const j = await api('POST', '/api/organiser', { sheet: $('#oTour').value, amount: amt, date: $('#oDate').value, mode: oMode, note: $('#oNote').value }); $('#orgDlg').close(); render(); toast(j.message); }
+  catch (err) { $('#oErr').textContent = err.message; }
+  finally { $('#oSave').disabled = false; }
+});
+
+function render() { if (D) ensureScope(); page === 'history' ? renderHistory() : page === 'tournaments' ? renderTournaments() : page === 'team' ? renderTeam() : renderOverview(); document.querySelectorAll('.nav[data-page]').forEach(n => n.classList.toggle('on', n.dataset.page === page)); updateLock(); }
+
+/* ---------- api ---------- */
+async function api(method, url, body) {
+  busy++; sync('busy', 'Saving to Excel…');
+  try {
+    const j = await call(method, url, body);
+    if (j.entries) D = j;
+    return j;
+  } finally { busy--; if (!busy) sync(); }
+}
+async function call(method, url, body) {
+  const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'X-cricpay': '1' }, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({ error: 'Server error' }));
+  if (r.status === 401) { location.href = '/login'; throw new Error('Please sign in'); }
+  if (!r.ok) throw new Error(j.error || 'Something went wrong');
+  return j;
+}
+function needPin(fn) { if (canEdit()) return fn(); toast('View only: only the captain can make changes.', true); }
+
+async function togglePlayed(btn) {
+  const [sheet, row] = btn.dataset.k.split('|'), e = D.entries.find(x => x.sheet === sheet && x.row == row);
+  const p = e.played.find(x => x.col === btn.dataset.col), want = p.v === 'yes' ? 'No' : 'Yes';
+  const before = e.due, m = tour(sheet).matches.find(x => x.col === p.col);
+  btn.classList.add('busy'); btn.disabled = true;
+  try {
+    await api('POST', '/api/played', { sheet, row: +row, col: p.col, value: want });
+    const n = D.entries.find(x => x.sheet === sheet && x.row == row);
+    refreshTable();
+    const diff = n.due - before;
+    toast(`${e.name}: ${want === 'Yes' ? 'played' : 'did not play'} ${m.title.split(' - ')[0]}${diff ? ` · due ${diff > 0 ? '+' : '−'}${rs(Math.abs(diff))}` : ''}`);
+  } catch (err) { toast(err.message, true); btn.classList.remove('busy'); btn.disabled = false; }
+}
+
+/* ---------- record payment ---------- */
+let mode = 'UPI', ptype = 'Match fees';
+function setType(v) { ptype = v; [...$('#pType').children].forEach(x => x.classList.toggle('on', x.dataset.v === v)); }
+function fillPlayers(sel) {
+  const s = $('#pTour').value, list = D.entries.filter(e => e.sheet === s).sort((a, b) => a.name.localeCompare(b.name));
+  $('#pPlayer').innerHTML = list.map(e => `<option value="${e.row}" ${sel == e.row ? 'selected' : ''}>${esc(e.name)}${e.balance < 0 ? ` (owes ${rs(-e.balance)})` : ''}</option>`).join('');
+  hint();
+}
+function hint() {
+  const e = D.entries.find(x => x.sheet === $('#pTour').value && x.row == $('#pPlayer').value);
+  if (!e) { $('#pHint').innerHTML = ''; return; }
+  const a = advOf(e), ex = expectMore(e);
+  $('#pHint').innerHTML = `<span>Due <b>${rs(e.due)}</b></span><span>Paid <b>${rs(e.paid)}</b></span><span>${e.balance < 0 ? `Outstanding <b style="color:var(--orange)">${rs(-e.balance)}</b>` : e.balance > 0 ? `Credit <b>${rs(e.balance)}</b>` : 'Settled'}</span>` +
+    (e.balance < 0 ? `<button type="button" id="pFull">Fill ${rs(-e.balance)}</button>` : '') +
+    (a ? `<span style="flex-basis:100%">${advPending(e) ? `Advance: <b style="color:var(--orange)">${rs(Math.min(e.paid, a))} of ${rs(a)}</b> paid` : `Advance <b>${rs(a)}</b> ✓`}${ex ? ' · ' + ex : ''}</span>` : ex ? `<span style="flex-basis:100%">${ex}</span>` : '');
+}
+function openPay(k, opts = {}) {
+  needPin(() => {
+    const [sheet, row] = (k || '').split('|');
+    const ed = D.tournaments.filter(t => t.can_edit);
+    const s = [sheet, F.t].find(x => x && canEditT(x)) || (ed[0] || {}).sheet;
+    $('#pTour').innerHTML = ed.map(t => `<option value="${esc(t.sheet)}" ${t.sheet === s ? 'selected' : ''}>${esc(t.sheet)}${t.title ? ' · ' + esc(t.title) : ''}</option>`).join('');
+    fillPlayers(row);
+    $('#pAmt').value = ''; $('#pNote').value = ''; $('#pErr').textContent = '';
+    const e = D.entries.find(x => x.sheet === $('#pTour').value && x.row == $('#pPlayer').value);
+    setType(opts.type || (e && advPending(e) ? 'Advance' : 'Match fees'));
+    if (opts.type === 'Advance' && e) $('#pAmt').value = advShort(e) || '';
+    $('#pDate').value = new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+    $('#payDlg').showModal(); setTimeout(() => $('#pAmt').focus(), 30);
+  });
+}
+$('#pTour').addEventListener('change', () => fillPlayers());
+$('#pPlayer').addEventListener('change', () => { hint(); const e = D.entries.find(x => x.sheet === $('#pTour').value && x.row == $('#pPlayer').value); if (e) setType(advPending(e) ? 'Advance' : 'Match fees'); });
+$('#pType').addEventListener('click', ev => {
+  const b = ev.target.closest('button'); if (!b) return; setType(b.dataset.v);
+  const e = D.entries.find(x => x.sheet === $('#pTour').value && x.row == $('#pPlayer').value);
+  if (b.dataset.v === 'Advance' && e && advShort(e) && !$('#pAmt').value) $('#pAmt').value = advShort(e);
+});
+$('#pHint').addEventListener('click', ev => { if (ev.target.id === 'pFull') { const e = D.entries.find(x => x.sheet === $('#pTour').value && x.row == $('#pPlayer').value); $('#pAmt').value = -e.balance; } });
+$('#pMode').addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; mode = b.dataset.v; [...$('#pMode').children].forEach(x => x.classList.toggle('on', x === b)); });
+$('#pCancel').addEventListener('click', () => $('#payDlg').close());
+$('#payForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const amt = $('#pAmt').value.replace(/[,₹\s]/g, '');
+  if (!/^-?\d+(\.\d+)?$/.test(amt) || +amt === 0) { $('#pErr').textContent = 'Enter an amount, e.g. 500'; return; }
+  $('#pSave').disabled = true;
+  try {
+    const j = await api('POST', '/api/payments', { sheet: $('#pTour').value, row: +$('#pPlayer').value, amount: amt, date: $('#pDate').value, mode, note: $('#pNote').value, type: ptype });
+    $('#payDlg').close(); render(); toast(j.message + ' · saved to Excel');
+  } catch (err) { $('#pErr').textContent = err.message; }
+  finally { $('#pSave').disabled = false; }
+});
+
+/* ---------- account ---------- */
+function updateLock() {
+  const me = D.me || {}; document.body.classList.toggle('ro', !canEdit());
+  $('#acctAv').textContent = initials(me.name || '?'); $('#acctName').textContent = me.name || 'Signed in';
+  const caps = Object.values(me.access || {}).filter(r => r === 'captain').length;
+  $('#acctRole').textContent = me.role === 'admin' ? '🛡️ Admin · all tournaments' : caps ? `🏏 Captain · ${caps} tournament${caps === 1 ? '' : 's'}` : '👀 Player · view only';
+  $('#navTeam').hidden = !isCaptain(); $('#navDl').hidden = !D.is_admin;
+  const n = D.pending_users || 0; $('#pendBadge').hidden = !n; $('#pendBadge').textContent = n;
+}
+$('#acctBtn').addEventListener('click', () => {
+  const me = D.me || {};
+  $('#adName').textContent = me.name || 'Your account';
+  const acc = Object.entries(me.access || {});
+  $('#adSub').textContent = `@${me.username} · ` + (me.role === 'admin' ? 'Admin: every tournament, all changes, manages accounts' :
+    acc.length ? acc.map(([s, r]) => `${r === 'captain' ? 'Captain' : 'Player'} of ${s}`).join(' · ') : 'No tournaments yet');
+  ['#adCur', '#adNew', '#adNew2'].forEach(x => $(x).value = ''); $('#adErr').textContent = '';
+  $('#acctDlg').showModal();
+});
+$('#adOut').addEventListener('click', async () => { try { await call('POST', '/api/auth/logout'); } catch (e) {} location.href = '/login'; });
+$('#acctForm').addEventListener('submit', async ev => {
+  ev.preventDefault(); $('#adErr').textContent = '';
+  if ($('#adNew').value !== $('#adNew2').value) { $('#adErr').textContent = "The new passwords don't match"; return; }
+  try { const j = await call('POST', '/api/auth/password', { current: $('#adCur').value, new: $('#adNew').value }); $('#acctDlg').close(); toast(j.message); }
+  catch (err) { $('#adErr').textContent = err.message; }
+});
+
+/* ---------- team & access (admins: everyone · captains: their tournaments) ---------- */
+let TEAM = null;
+async function loadTeam() { TEAM = await call('GET', '/api/users'); D.pending_users = TEAM.users.filter(u => u.status === 'pending').length; updateLock(); }
+const ago = iso => { if (!iso) return 'never'; const d = new Date(iso); return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' + d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' }); };
+const ROLE_LBL = { captain: '🏏 Captain', player: '👀 Player' };
+function chips(u) {
+  if (u.role === 'admin') return '<span class="achip admin">🛡️ Admin · all tournaments</span>';
+  const a = Object.entries(u.access || {});
+  const out = a.map(([sh, r]) => `<span class="achip ${r}">${r === 'captain' ? '🏏' : '👀'} ${esc(sh)}</span>`).join('');
+  const other = u.other_access ? `<span class="achip" title="Also in tournaments you don't manage">+${u.other_access} other</span>` : '';
+  return out + other || '<span class="muted" style="font-size:12.5px">No tournament access</span>';
+}
+async function renderTeam() {
+  if (!isCaptain()) { page = 'overview'; return render(); }
+  $('#main').innerHTML = '<div class="empty">Loading team…</div>';
+  try { await loadTeam(); } catch (err) { $('#main').innerHTML = `<div class="empty">${esc(err.message)}</div>`; return; }
+  const A = TEAM.scope === 'admin', U = TEAM.users, me = TEAM.me.username;
+  const admins = U.filter(u => u.role === 'admin' && u.status === 'active').length;
+  const pend = U.filter(u => u.status === 'pending');
+  const mine = u => u.role !== 'admin' && Object.keys(u.access || {}).length;
+  const shown = A ? U : U.filter(u => u.status === 'pending' || mine(u) || u.username === me);
+  const others = A ? [] : U.filter(u => !shown.includes(u) && u.role !== 'admin');
+  const capOf = u => Object.values(u.access || {}).includes('captain') || u.role === 'admin';
+  const row = u => {
+    const self = u.username === me, lastAdmin = u.role === 'admin' && u.status === 'active' && admins <= 1;
+    let acts = '';
+    if (u.status === 'pending') acts = `<button class="btn primary" data-uacc="${esc(u.username)}">Give access</button><button class="btn danger" data-udel="${esc(u.username)}">Reject</button>`;
+    else {
+      if (A ? !self : !capOf(u)) acts += `<button class="btn" data-uacc="${esc(u.username)}">Edit access</button>`;
+      if (A || (!capOf(u) && !u.other_access)) acts += `<button class="btn" data-upass="${esc(u.username)}">Reset password</button>`;
+      if (A && !self && !lastAdmin) acts += u.status === 'active' ? `<button class="btn" data-ustatus="${esc(u.username)}|disabled">Disable</button>` : `<button class="btn" data-ustatus="${esc(u.username)}|active">Enable</button>`;
+      if (A && !self && !lastAdmin) acts += `<button class="btn danger" data-udel="${esc(u.username)}">Delete</button>`;
+    }
+    return `<tr>
+      <td class="c-who"><div class="who"><span class="av">${esc(initials(u.name))}</span><div><b>${esc(u.name)}${self ? ' <span class="muted" style="font-weight:500">(you)</span>' : ''}</b><small>@${esc(u.username)}${u.status === 'pending' && u.note ? ` · “${esc(u.note)}”` : ''}</small></div></div></td>
+      <td class="c-num" data-l="Access" style="white-space:normal"><div class="chips">${chips(u)}</div></td>
+      <td class="c-num" data-l="Status"><span class="ubadge ${u.status}">${u.status === 'pending' ? 'Waiting for access' : u.status === 'active' ? 'Active' : 'Disabled'}</span></td>
+      <td class="c-num" data-l="Last sign-in">${u.status === 'pending' ? 'Signed up ' + ago(u.created) : ago(u.last_login)}</td>
+      <td class="c-act"><div class="uact">${acts}</div></td></tr>`;
+  };
+  const caps = U.filter(u => u.role !== 'admin' && Object.values(u.access || {}).includes('captain')).length;
+  const players = U.filter(u => u.role !== 'admin' && Object.values(u.access || {}).includes('player') && u.status === 'active').length;
+  $('#main').innerHTML = `
+    <div class="head"><div><div class="crumb">${A ? 'Admin' : 'Captain'} / Team &amp; access</div><h1>Team &amp; access</h1><p>${A ? 'Admins see and change everything. Captains manage the players in their own tournaments. Players can only view their tournaments.' : `You manage the players of ${TEAM.sheets.map(esc).join(', ')}. Players can view; only captains and admins can make changes.`}</p></div>
+      <div class="actions"><button class="btn primary" id="uAdd">+ Add team member</button></div></div>
+    <div class="kpis">
+      ${A ? `<div class="kpi"><div class="l">Admins</div><div class="v">${admins}</div><div class="h">all tournaments</div></div><div class="kpi"><div class="l">Captains</div><div class="v">${caps}</div><div class="h">read &amp; write their tournament</div></div>` : ''}
+      <div class="kpi g"><div class="l">Players</div><div class="v">${A ? players : shown.filter(u => u.status === 'active' && mine(u)).length}</div><div class="h">view only</div></div>
+      <div class="kpi ${pend.length ? 'o' : ''}"><div class="l">Waiting for access</div><div class="v">${pend.length}</div><div class="h">${pend.length ? 'give them access below' : 'nobody waiting'}</div></div>
+    </div>
+    <div class="panel"><div class="panel-h"><div><h2>${A ? 'Everyone' : 'Your players'}</h2><p>New sign-ups wait here until an admin or captain gives them access to a tournament.</p></div><span class="count">${shown.length} account${shown.length === 1 ? '' : 's'}</span></div>
+      <div style="height:16px"></div>
+      ${A ? `<div class="switchrow"><label class="tog"><input type="checkbox" id="uReg" ${TEAM.allow_register ? 'checked' : ''}><span></span></label><div><b>Allow sign-ups</b><div class="sugg" style="margin:0">${TEAM.allow_register ? 'Anyone with the link can request an account. A captain or admin gives them access.' : 'Closed: only admins and captains can create accounts.'}</div></div></div>` : ''}
+      <table class="resp hist"><thead><tr><th>Member</th><th>Access</th><th>Status</th><th>Last sign-in</th><th></th></tr></thead><tbody>${shown.map(row).join('')}</tbody></table>
+      ${others.length ? `<div class="sugg" style="padding:14px 26px 20px">Other members who can be added to your tournament: ${others.map(u => `<button class="linkbtn" data-uacc="${esc(u.username)}">${esc(u.name)}</button>`).join(' · ')}</div>` : ''}
+    </div>`;
+}
+function accessEditor(box, u) {
+  const A = TEAM.scope === 'admin', sheets = A ? TEAM.sheets : TEAM.sheets;
+  const cur = (u && u.access) || {}, isAdm = u && u.role === 'admin';
+  const def = !u && F.t && sheets.includes(F.t) ? { [F.t]: 'player' } : {};
+  box.innerHTML = (A ? `<label class="chk" style="margin-bottom:10px"><input type="checkbox" class="ac-admin" ${isAdm ? 'checked' : ''}><span><b>Admin</b>: every tournament, all changes, manages everyone</span></label>` : '') +
+    `<div class="ac-list" ${isAdm ? 'hidden' : ''}>` + sheets.map(sh => {
+      const v = cur[sh] || def[sh] || '';
+      const lockedCap = !A && v === 'captain';
+      return `<div class="acc-row"><b>${esc(sh)}</b><select class="rolesel" data-sheet="${esc(sh)}" ${lockedCap ? 'disabled' : ''}>
+        <option value="" ${!v ? 'selected' : ''}>No access</option><option value="player" ${v === 'player' ? 'selected' : ''}>👀 Player (view)</option>
+        ${A || lockedCap ? `<option value="captain" ${v === 'captain' ? 'selected' : ''}>🏏 Captain (view &amp; edit)</option>` : ''}</select></div>`;
+    }).join('') + '</div>';
+  const cb = box.querySelector('.ac-admin'); if (cb) cb.addEventListener('change', () => { box.querySelector('.ac-list').hidden = cb.checked; });
+}
+function readAccess(box) {
+  const out = {}; box.querySelectorAll('select[data-sheet]:not([disabled])').forEach(sel => { out[sel.dataset.sheet] = sel.value || null; });
+  const cb = box.querySelector('.ac-admin'); return { access: out, admin: cb ? cb.checked : undefined };
+}
+let acUser = null;
+function openAccess(username) {
+  const u = TEAM.users.find(x => x.username === username); if (!u) return; acUser = u;
+  $('#acTitle').textContent = `${u.status === 'pending' ? 'Give access' : 'Access'} · ${u.name}`;
+  $('#acSub').textContent = u.status === 'pending' ? `@${u.username} signed up${u.note ? ` and wrote “${u.note}”` : ''}. Choose their tournament; this approves the account.` : `@${u.username}`;
+  $('#acErr').textContent = ''; accessEditor($('#acBody'), u); $('#accDlg').showModal();
+}
+$('#accForm').addEventListener('submit', async ev => {
+  ev.preventDefault(); $('#acErr').textContent = '';
+  const { access, admin } = readAccess($('#acBody')), body = { access };
+  if (TEAM.scope === 'admin') body.role = admin ? 'admin' : 'member';
+  if (acUser.status === 'pending' && !admin && !Object.values(access).some(Boolean)) { $('#acErr').textContent = 'Pick at least one tournament.'; return; }
+  try { const j = await call('PATCH', '/api/users/' + encodeURIComponent(acUser.username), body); $('#accDlg').close(); toast(j.message); await refreshAll(); renderTeam(); }
+  catch (err) { $('#acErr').textContent = err.message; }
+});
+let udMode = 'new', udUser = '';
+const genPass = () => { const w = ['six', 'four', 'bat', 'ball', 'pitch', 'stump', 'over', 'spin', 'swing', 'yorker', 'catch', 'boundary']; const a = new Uint32Array(3); crypto.getRandomValues(a); return w[a[0] % w.length] + w[a[1] % w.length] + (100 + a[2] % 900); };
+function openUserDlg(mode, u) {
+  udMode = mode; udUser = u ? u.username : ''; $('#udErr').textContent = '';
+  $('#udNew').hidden = mode !== 'new';
+  $('#udTitle').textContent = mode === 'new' ? 'Add a team member' : `Reset password · ${u.name}`;
+  $('#udSub').textContent = mode === 'new' ? 'They can sign in straight away with these details.' : 'They will be signed out everywhere and need this new password.';
+  $('#udSave').textContent = mode === 'new' ? 'Create account' : 'Reset password';
+  if (mode === 'new') { $('#udName').value = ''; $('#udUser').value = ''; delete $('#udUser').dataset.t; accessEditor($('#udAcc'), null); }
+  $('#udPass').value = genPass();
+  $('#userDlg').showModal(); setTimeout(() => (mode === 'new' ? $('#udName') : $('#udPass')).focus(), 30);
+}
+$('#udGen').addEventListener('click', () => { $('#udPass').value = genPass(); });
+$('#udName').addEventListener('input', () => { if (!$('#udUser').dataset.t) $('#udUser').value = $('#udName').value.trim().toLowerCase().split(/\s+/)[0].replace(/[^a-z0-9._-]/g, ''); });
+$('#udUser').addEventListener('input', () => { $('#udUser').dataset.t = '1'; });
+$('#userForm').addEventListener('submit', async ev => {
+  ev.preventDefault(); $('#udErr').textContent = '';
+  try {
+    const pw = $('#udPass').value;
+    let j;
+    if (udMode === 'new') {
+      const { access, admin } = readAccess($('#udAcc'));
+      if (!admin && !Object.values(access).some(Boolean)) { $('#udErr').textContent = 'Pick the tournament to add them to.'; return; }
+      j = await call('POST', '/api/users', { name: $('#udName').value, username: $('#udUser').value.trim(), password: pw, role: admin ? 'admin' : 'member', access });
+    } else j = await call('POST', `/api/users/${encodeURIComponent(udUser)}/password`, { password: pw });
+    const uname = udMode === 'new' ? $('#udUser').value.trim().toLowerCase() : udUser;
+    $('#userDlg').close();
+    const msg = `cricpay login\nLink: ${location.origin}\nUsername: ${uname}\nPassword: ${pw}`;
+    try { await navigator.clipboard.writeText(msg); toast(j.message + ' Login details copied: paste them to the player on WhatsApp.'); } catch (e) { toast(j.message); }
+    renderTeam();
+  } catch (err) { $('#udErr').textContent = err.message; }
+});
+async function refreshAll() { const r = await fetch('/api/ledger'); if (r.ok) { D = await r.json(); updateLock(); } }
+async function teamAction(fn) { try { const j = await fn(); toast(j.message); await refreshAll(); renderTeam(); } catch (err) { toast(err.message, true); renderTeam(); } }
+
+/* ---------- events ---------- */
+document.addEventListener('click', ev => {
+  const nav = ev.target.closest('.nav[data-page]'); if (nav) { page = nav.dataset.page; render(); window.scrollTo(0, 0); return; }
+  const pill = ev.target.closest('.pill[data-k]'); if (pill && !pill.disabled) { needPin(() => togglePlayed(pill)); return; }
+  const cu = ev.target.closest('[data-custom]'); if (cu) { openCustom(cu.dataset.custom); return; }
+  const adv = ev.target.closest('[data-adv]'); if (adv) { openPay(adv.dataset.adv, { type: 'Advance' }); return; }
+  const pay = ev.target.closest('[data-pay]'); if (pay) { openPay(pay.dataset.pay); return; }
+  if (ev.target.closest('[data-newtour]')) { openNewTour(); return; }
+  if (ev.target.id === 'uAdd') { openUserDlg('new'); return; }
+  const uac = ev.target.closest('[data-uacc]'); if (uac) { openAccess(uac.dataset.uacc); return; }
+  const us = ev.target.closest('[data-ustatus]'); if (us) { const [u, st] = us.dataset.ustatus.split('|'); teamAction(() => call('PATCH', '/api/users/' + encodeURIComponent(u), { status: st })); return; }
+  const up = ev.target.closest('[data-upass]'); if (up) { openUserDlg('reset', TEAM.users.find(x => x.username === up.dataset.upass)); return; }
+  const ud = ev.target.closest('[data-udel]');
+  if (ud) {
+    if (!ud.classList.contains('confirm')) { ud.classList.add('confirm'); const t = ud.textContent; ud.textContent = 'Sure?'; ud.style.background = 'var(--danger)'; ud.style.color = '#fff'; setTimeout(() => { if (ud.isConnected) { ud.classList.remove('confirm'); ud.textContent = t; ud.style.background = ''; ud.style.color = ''; } }, 3500); return; }
+    teamAction(() => call('DELETE', '/api/users/' + encodeURIComponent(ud.dataset.udel))); return;
+  }
+  const po = ev.target.closest('[data-payorg]'); if (po) { openPayOrg(po.dataset.payorg); return; }
+  const ap = ev.target.closest('[data-addpl]'); if (ap) { openAddPlayers(ap.dataset.addpl); return; }
+  const em = ev.target.closest('[data-editm]'); if (em) { openEditMatches(em.dataset.editm); return; }
+  const vw = ev.target.closest('[data-view]'); if (vw) { setScope(vw.dataset.view); F.q = ''; F.s = ''; page = 'overview'; render(); window.scrollTo(0, 0); return; }
+  const u = ev.target.closest('[data-undo]');
+  if (u) {
+    needPin(async () => {
+      if (!u.classList.contains('confirm')) { u.classList.add('confirm'); u.textContent = 'Confirm undo'; setTimeout(() => { u.classList.remove('confirm'); u.textContent = 'Undo'; }, 3500); return; }
+      try { const j = await api('DELETE', '/api/payments/' + encodeURIComponent(u.dataset.undo)); render(); toast(j.message); } catch (err) { toast(err.message, true); }
+    });
+    return;
+  }
+  if (ev.target.id === 'csv') exportCsv();
+});
+document.addEventListener('input', ev => { if (ev.target.id === 'q') { F.q = ev.target.value; refreshTable(); } });
+document.addEventListener('change', ev => {
+  if (ev.target.id === 'tsel') { setScope(ev.target.value); F.q = ''; render(); return; }
+  if (ev.target.id === 'uReg') { teamAction(() => call('POST', '/api/users/settings', { allow_register: ev.target.checked })); return; } if (ev.target.id === 'ft') { F.t = ev.target.value; refreshTable(); } if (ev.target.id === 'fs') { F.s = ev.target.value; refreshTable(); } });
+
+function exportCsv() {
+  const rows = [['Player', 'Tournament', 'Matches played', 'Amount due', 'Paid so far', 'Advance', 'Outstanding', 'Credit', 'Status']];
+  filtered().forEach(e => rows.push([e.name, e.sheet, `${e.played.filter(p => p.v === 'yes').length}/${e.played.length}`, e.due, e.paid, advOf(e) ? (advPending(e) ? `Pending ${advShort(e)}` : 'Paid') : '', e.balance < 0 ? -e.balance : 0, e.balance > 0 ? e.balance : 0, { s: 'Settled', o: 'Outstanding', c: 'Credit' }[status(e)]]));
+  const csv = rows.map(r => r.map(v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : v).join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
+  a.download = `player-payments-${new Date().toISOString().slice(0, 10)}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/* ---------- load + live refresh ---------- */
+async function load() { const r = await fetch('/api/ledger'); if (r.status === 401) { location.href = '/login'; return; } D = await r.json(); render(); sync(); }
+setInterval(async () => {
+  if (document.hidden || busy || document.querySelector('dialog[open]') || (document.activeElement && document.activeElement.id === 'q')) return;
+  try { const r = await fetch('/api/version'); if (r.status === 401) { location.href = '/login'; return; } const j = await r.json(); if (j.version !== D.version) { const y = scrollY; await load(); scrollTo(0, y); } }
+  catch (e) { sync('err', 'Offline, retrying…'); }
+}, 30000);
+load().catch(() => { $('#main').innerHTML = '<div class="empty">Could not reach the tracker server. Is it running?</div>'; });
+})();
+</script>
+</body>
+</html>

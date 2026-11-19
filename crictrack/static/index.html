@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#2b8452">
+<meta name="apple-mobile-web-app-title" content="cricpay">
+<title>cricpay · Sheet view</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f1e8; --surface:#fffdf7; --surface-2:#f0ece0; --ink:#1b2620; --ink-2:#55615a; --ink-3:#8a948d;
+  --line:#e2ddcf; --pitch:#1e6b47; --pitch-ink:#ffffff; --pitch-soft:#dcebe1;
+  --leather:#b3392c; --leather-soft:#f6e0dc; --gold:#a8771c; --gold-soft:#f4ead2;
+  --no:#e9e5da; --focus:#2b8a5e; --shadow:0 1px 2px rgba(27,38,32,.06),0 4px 16px rgba(27,38,32,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1512; --surface:#161e1a; --surface-2:#1d2722; --ink:#e8efe9; --ink-2:#a7b4ac; --ink-3:#6f7d75;
+    --line:#26322c; --pitch:#3fa776; --pitch-ink:#08130d; --pitch-soft:#173426;
+    --leather:#ef7a6b; --leather-soft:#3a1f1b; --gold:#e0b25a; --gold-soft:#33291a; --no:#25302a; --focus:#5cc893;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1512; --surface:#161e1a; --surface-2:#1d2722; --ink:#e8efe9; --ink-2:#a7b4ac; --ink-3:#6f7d75;
+  --line:#26322c; --pitch:#3fa776; --pitch-ink:#08130d; --pitch-soft:#173426;
+  --leather:#ef7a6b; --leather-soft:#3a1f1b; --gold:#e0b25a; --gold-soft:#33291a; --no:#25302a; --focus:#5cc893;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 "DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:0 16px}
+h1,h2,h3,.disp{font-family:"Barlow Condensed",system-ui,sans-serif;letter-spacing:.01em;margin:0}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;min-height:56px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Barlow Condensed";font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.04em}
+.ball{width:22px;height:22px;border-radius:50%;background:var(--leather);position:relative;flex:none}
+.ball:after{content:"";position:absolute;inset:3px 9px;border-left:1.5px dashed rgba(255,255,255,.75);border-right:1.5px dashed rgba(255,255,255,.75)}
+.sync{display:flex;align-items:center;gap:6px;color:var(--ink-2);font-size:12.5px;margin-left:auto}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--pitch)}
+.sync.saving .dot{background:var(--gold);animation:pulse 1s infinite}
+.sync.err .dot{background:var(--leather)}
+@keyframes pulse{50%{opacity:.3}}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 13px "DM Sans";padding:7px 12px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--pitch);border-color:var(--pitch);color:var(--pitch-ink)}
+.btn svg{width:15px;height:15px}
+
+/* tabs */
+.tabs{display:flex;gap:4px;overflow-x:auto;padding:14px 0 0;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:transparent;color:var(--ink-2);font:600 15px "Barlow Condensed";letter-spacing:.03em;text-transform:uppercase;padding:9px 14px;border-radius:9px 9px 0 0;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent}
+.tab small{display:block;font:500 11px "DM Sans";text-transform:none;letter-spacing:0;color:var(--ink-3)}
+.tab.on{color:var(--ink);background:var(--surface);border-bottom-color:var(--pitch)}
+
+/* hero */
+.hero{background:var(--surface);border-radius:0 14px 14px 14px;padding:22px 22px 18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.hero h1{font-size:34px;font-weight:700;line-height:1.05;text-transform:uppercase}
+.hero .sub{color:var(--ink-2);margin-top:4px}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.fact{background:var(--surface-2);border-radius:999px;padding:4px 11px;font-size:12.5px;color:var(--ink-2)}
+.fact b{color:var(--ink);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:18px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg)}
+.kpi .l{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:600}
+.kpi .v{font-family:"Barlow Condensed";font-weight:700;font-size:30px;line-height:1.1;margin-top:2px;font-variant-numeric:tabular-nums}
+.kpi .h{font-size:12px;color:var(--ink-2)}
+.kpi.neg .v{color:var(--leather)} .kpi.pos .v{color:var(--pitch)} .kpi.gold .v{color:var(--gold)}
+
+/* sections */
+section{margin-top:26px}
+.sec-head{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.sec-head h2{font-size:22px;text-transform:uppercase;font-weight:700}
+.sec-head p{margin:0;color:var(--ink-3);font-size:12.5px}
+.tools{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.search{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 10px;font:inherit;min-width:0;width:180px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:5px 11px;font:500 12.5px "DM Sans";cursor:pointer}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.scroll{overflow-x:auto}
+
+/* tables */
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th{font:600 11.5px "DM Sans";text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface)}
+td{padding:3px 4px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr.foot td{background:var(--surface-2);color:var(--ink-2)}
+tr.hide{display:none}
+.players td.name,.players th.name{position:sticky;left:0;background:var(--surface);z-index:1;box-shadow:1px 0 0 var(--line)}
+.players tr.foot td.name{background:var(--surface-2)}
+th.c,td.c{text-align:center}
+th.r,td.r{text-align:right}
+
+/* editable cells */
+.in{width:100%;min-width:56px;border:1px solid transparent;background:transparent;color:inherit;font:inherit;padding:6px 6px;border-radius:6px;outline:none}
+.in.num{text-align:right;min-width:70px}
+.in.txt{min-width:120px}
+.in.date{min-width:150px}
+.in:hover:not([readonly]){border-color:var(--line);background:var(--bg)}
+.in:focus{border-color:var(--focus);background:var(--surface);box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 18%,transparent)}
+.in[readonly]{cursor:default}
+.calc{display:block;padding:6px 6px;text-align:right;color:var(--ink);font-weight:500}
+.calc.txt{text-align:left}
+.calc[title]{cursor:help}
+.neg{color:var(--leather)!important;font-weight:600} .pos{color:var(--pitch)!important;font-weight:600}
+.flash{animation:flash 1.2s}
+@keyframes flash{0%{background:var(--gold-soft)}100%{background:transparent}}
+
+.yn{width:34px;height:28px;border-radius:7px;border:0;font:700 12px "DM Sans";cursor:pointer;background:var(--surface-2);color:var(--ink-3)}
+.yn.yes{background:var(--pitch);color:var(--pitch-ink)}
+.yn.no{background:var(--no);color:var(--ink-3)}
+.yn:disabled{cursor:default}
+.yn.f{outline:1px dashed var(--ink-3);outline-offset:-3px}
+.st{border:1px dashed var(--line);background:transparent;color:var(--ink-3);border-radius:999px;font:600 11.5px "DM Sans";padding:4px 10px;cursor:pointer;min-width:58px}
+.st.paid{background:var(--pitch-soft);color:var(--pitch);border:1px solid transparent}
+.st:disabled{cursor:default}
+
+/* match cards */
+.matches{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.mcard{padding:0}
+.mcard header{padding:12px 14px 10px;border-bottom:1px solid var(--line)}
+.mcard h3{font-size:18px;font-weight:600;line-height:1.15}
+.mcard .meta{display:flex;gap:10px;align-items:center;margin-top:6px;font-size:12.5px;color:var(--ink-2)}
+.bar{flex:1;height:6px;border-radius:9px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--pitch)}
+.mcard td{padding:1px 4px}
+.mcard td.sn{color:var(--ink-3);width:26px;text-align:center;font-size:12px}
+.mcard .in.txt{min-width:110px}
+.mcard .in.num{min-width:64px}
+
+.ledger{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.ledger .card{padding:6px}
+
+.empty{padding:30px;text-align:center;color:var(--ink-3)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(30px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:13px;transition:.25s;z-index:50;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.toast.err{background:var(--leather);color:#fff}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);padding:20px;width:min(340px,calc(100% - 32px))}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+dialog h3{font-size:22px;text-transform:uppercase}
+dialog input{width:100%;margin:12px 0;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;letter-spacing:.2em}
+.ro-note{font-size:12px;color:var(--ink-3)}
+footer{color:var(--ink-3);font-size:12px;padding:30px 0 40px;text-align:center}
+@media (max-width:640px){
+  .hero{padding:16px;border-radius:0 12px 12px 12px}
+  .hero h1{font-size:27px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .kpi .v{font-size:24px}
+  .search{width:100%}
+  .tools{margin-left:0;width:100%}
+  .sync .txt{display:none}
+  .matches{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <a class="btn" href="/" title="Back to cricpay">← cricpay</a><div class="brand"><span class="ball"></span>Sheet view</div>
+  <div class="sync" id="sync"><span class="dot"></span><span class="txt" id="syncTxt">Loading…</span></div>
+  <button class="btn" id="lockBtn" hidden></button>
+  <a class="btn" href="/download" title="Download the Excel file">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>Excel</a>
+</div></div>
+
+<div class="wrap">
+  <nav class="tabs" id="tabs"></nav>
+  <main id="main"><div class="empty">Loading tracker…</div></main>
+  <footer>All data lives in <b id="fileName">the Excel file</b>. Edits save straight into it, and calculated cells (ƒ) use the workbook's own formulas.</footer>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+const $ = (s, el = document) => el.querySelector(s);
+const store = {
+  get(k){ try { return sessionStorage.getItem(k) } catch(e){ return null } },
+  set(k,v){ try { sessionStorage.setItem(k,v) } catch(e){} },
+  del(k){ try { sessionStorage.removeItem(k) } catch(e){} },
+  lget(k){ try { return localStorage.getItem(k) } catch(e){ return null } },
+  lset(k,v){ try { localStorage.setItem(k,v) } catch(e){} },
+};
+
+let DATA = null, cur = 0, version = null, pin = store.get('pin') || '', pending = 0, chain = Promise.resolve();
+let filter = { q: '', mode: 'all' };
+
+const nf = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 });
+const money = n => '₹' + nf.format(Math.round(n || 0));
+const fmt = c => {
+  if (!c || c.v === null || c.v === undefined) return '';
+  if (c.t === 'n') return nf.format(c.v);
+  if (c.t === 'd') { const d = new Date(c.v + 'T00:00:00'); return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' }); }
+  return String(c.v);
+};
+const num = c => (c && c.t === 'n') ? c.v : 0;
+const sheet = () => DATA.sheets[cur];
+const cell = ref => sheet().cells[ref];
+const canEdit = () => !!(DATA && DATA.sheets[cur] && DATA.sheets[cur].can_edit);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+
+function toast(msg, err) {
+  const t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : '');
+  clearTimeout(t._h); t._h = setTimeout(() => t.className = 'toast', err ? 4200 : 1800);
+}
+function setSync(mode, txt) {
+  $('#sync').className = 'sync ' + (mode || ''); $('#syncTxt').textContent = txt;
+}
+function syncIdle() { setSync('', `Synced with Excel · ${DATA.saved_at}`); }
+
+/* ---------------- cell widgets ---------------- */
+// kind: yn | status | num | txt | date | auto
+function widget(ref, kind, opts = {}) {
+  const c = cell(ref);
+  const isF = c && c.f;
+  if (kind === 'auto') kind = c ? (c.t === 'n' ? 'num' : c.t === 'd' ? 'date' : 'txt') : (opts.fallback || 'num');
+  if (kind === 'yn') {
+    const v = (c && c.v ? String(c.v) : '').toLowerCase();
+    const cls = v === 'yes' ? 'yes' : v === 'no' ? 'no' : '';
+    return `<button class="yn ${cls} ${isF ? 'f' : ''}" data-ref="${ref}" data-kind="yn" ${isF || !canEdit() ? 'disabled' : ''} ${isF ? `title="Calculated: ${esc(c.f)}"` : ''}>${v === 'yes' ? 'Y' : v === 'no' ? 'N' : '–'}</button>`;
+  }
+  if (kind === 'status') {
+    const paid = c && /paid/i.test(String(c.v || ''));
+    return `<button class="st ${paid ? 'paid' : ''}" data-ref="${ref}" data-kind="status" ${!canEdit() || isF ? 'disabled' : ''}>${paid ? '✓ Paid' : (c && c.v ? esc(c.v) : 'Unpaid')}</button>`;
+  }
+  if (isF) {
+    const cls = (kind === 'txt' || c.t === 's') ? 'txt' : '';
+    return `<span class="calc ${cls} ${opts.sign ? signCls(c) : ''}" data-ref="${ref}" data-kind="calc" ${opts.sign ? 'data-sign="1"' : ''} title="ƒ ${esc(c.f)}">${esc(fmt(c))}</span>`;
+  }
+  const raw = c ? (c.t === 'n' ? c.v : c.v) : '';
+  const type = kind === 'date' ? 'date' : 'text';
+  const shown = kind === 'num' ? (c && c.t === 'n' ? nf.format(c.v) : (raw ?? '')) : (raw ?? '');
+  return `<input class="in ${kind} ${opts.sign ? signCls(c) : ''}" type="${type}" data-ref="${ref}" data-kind="${kind}" ${opts.sign ? 'data-sign="1"' : ''}
+    ${kind === 'num' ? 'inputmode="decimal"' : ''} ${opts.list ? `list="${opts.list}"` : ''}
+    value="${esc(shown)}" data-raw="${esc(raw ?? '')}" ${canEdit() ? '' : 'readonly'} aria-label="${ref}">`;
+}
+function signCls(c) { if (!c || c.t !== 'n') return ''; return c.v < 0 ? 'neg' : c.v > 0 ? 'pos' : ''; }
+
+/* refresh all widgets in place after a save / reload (keeps focus) */
+function refreshWidgets() {
+  document.querySelectorAll('[data-ref]').forEach(el => {
+    if (el === document.activeElement) return;
+    const ref = el.dataset.ref, k = el.dataset.kind, c = cell(ref), sign = el.dataset.sign;
+    const tmp = document.createElement('div');
+    tmp.innerHTML = widget(ref, k === 'calc' ? 'auto' : k, { sign, list: el.getAttribute('list') });
+    const n = tmp.firstElementChild;
+    if (n.outerHTML !== el.outerHTML) {
+      el.replaceWith(n);
+      if (el.dataset.kind === 'calc' || n.dataset.kind === 'calc') { n.classList.add('flash'); }
+    }
+  });
+  renderKpis(); renderMatchMeta(); applyFilter();
+}
+
+/* ---------------- rendering ---------------- */
+function renderTabs() {
+  $('#tabs').innerHTML = DATA.sheets.map((s, i) => {
+    const info = s.layout.info, t = info && info.facts.find(f => /tournament/i.test(f.k));
+    return `<button class="tab ${i === cur ? 'on' : ''}" data-i="${i}">${esc(s.name)}<small>${esc(t ? t.v : '')}</small></button>`;
+  }).join('');
+}
+
+function headerIdx(re) { const p = sheet().layout.players; if (!p) return -1; return p.headers.findIndex(h => re.test(h)); }
+
+function computeKpis() {
+  const L = sheet().layout, p = L.players; if (!p) return null;
+  const named = p.player_rows.filter(r => { const c = cell(p.name_col + r); return c && c.v; });
+  const bi = headerIdx(/balance/i);
+  let pi = headerIdx(/paid so far|so far paid/i); if (pi < 0) pi = headerIdx(/install/i);
+  let owe = 0, oweN = 0, cred = 0, credN = 0, got = 0;
+  named.forEach(r => {
+    if (bi >= 0) { const v = num(cell(p.cols[bi] + r)); if (v < 0) { owe += -v; oweN++ } else if (v > 0) { cred += v; credN++ } }
+    if (pi >= 0) got += num(cell(p.cols[pi] + r));
+  });
+  const played = p.match_cols.filter(col => named.some(r => /yes/i.test(String((cell(col + r) || {}).v || '')))).length;
+  return { players: named.length, owe, oweN, cred, credN, got, gotLabel: pi >= 0 ? p.headers[pi] : '', played, matches: p.match_cols.length };
+}
+
+function renderKpis() {
+  const el = $('#kpis'); if (!el) return;
+  const k = computeKpis(); if (!k) { el.innerHTML = ''; return; }
+  const fee = (sheet().layout.info?.facts || []).find(f => /^fee/i.test(f.k));
+  el.innerHTML = `
+    <div class="kpi"><div class="l">Squad</div><div class="v">${k.players}</div><div class="h">players · ${k.played}/${k.matches} matches played</div></div>
+    <div class="kpi pos"><div class="l">Collected</div><div class="v">${money(k.got)}</div><div class="h">${esc(k.gotLabel)}${fee ? ' · fee ' + esc(fee.v) : ''}</div></div>
+    <div class="kpi neg"><div class="l">Outstanding</div><div class="v">${money(k.owe)}</div><div class="h">owed by ${k.oweN} player${k.oweN === 1 ? '' : 's'}</div></div>
+    <div class="kpi gold"><div class="l">Advance / credit</div><div class="v">${money(k.cred)}</div><div class="h">held for ${k.credN} player${k.credN === 1 ? '' : 's'}</div></div>`;
+}
+
+function renderPlayers() {
+  const p = sheet().layout.players; if (!p) return '';
+  const bi = headerIdx(/balance/i);
+  const head = p.cols.map((col, i) => {
+    const h = p.headers[i], isM = p.match_cols.includes(col), isName = col === p.name_col;
+    return `<th class="${isM ? 'c' : isName ? 'name' : (col === p.sn_col ? 'c' : 'r')}">${esc(h.replace(/^match\s*/i, 'M'))}</th>`;
+  }).join('');
+  const body = p.rows.map(r => {
+    const isP = p.player_rows.includes(r);
+    return `<tr class="${isP ? 'prow' : 'foot'}" data-row="${r}">` + p.cols.map((col, i) => {
+      const ref = col + r, isName = col === p.name_col;
+      if (col === p.sn_col) return `<td class="c" style="color:var(--ink-3);font-size:12px">${esc(fmt(cell(ref)))}</td>`;
+      if (isName) return `<td class="name">${isP ? widget(ref, 'txt') : `<span class="calc txt">${esc(fmt(cell(ref)))}</span>`}</td>`;
+      if (isP && p.match_cols.includes(col)) return `<td class="c">${widget(ref, 'yn')}</td>`;
+      return `<td class="r">${widget(ref, 'auto', { sign: i === bi })}</td>`;
+    }).join('') + '</tr>';
+  }).join('');
+  return `<section>
+    <div class="sec-head"><h2>Players &amp; balances</h2><p>Tap Y/N to mark who played. Negative balance = still owes.</p>
+      <div class="tools">
+        <input class="search" id="q" placeholder="Search player…" value="${esc(filter.q)}">
+        ${['all', 'owes', 'settled'].map(m => `<button class="chip ${filter.mode === m ? 'on' : ''}" data-mode="${m}">${m === 'all' ? 'All' : m === 'owes' ? 'Owes money' : 'Settled'}</button>`).join('')}
+      </div></div>
+    <div class="card scroll"><table class="players"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>
+  </section>`;
+}
+
+function applyFilter() {
+  const p = sheet().layout.players; if (!p) return;
+  const bi = headerIdx(/balance/i), q = filter.q.trim().toLowerCase();
+  document.querySelectorAll('table.players tr.prow').forEach(tr => {
+    const r = tr.dataset.row, name = String((cell(p.name_col + r) || {}).v || '').toLowerCase();
+    const bal = bi >= 0 ? num(cell(p.cols[bi] + r)) : 0;
+    let show = !q || name.includes(q);
+    if (filter.mode === 'owes') show = show && bal < 0;
+    if (filter.mode === 'settled') show = show && !!name && bal >= 0;
+    tr.classList.toggle('hide', !show);
+  });
+}
+
+function lineupMeta(b) {
+  const [, pc, cc, sc] = b.cols;
+  const named = b.player_rows.filter(r => (cell(pc + r) || {}).v);
+  const paid = named.filter(r => /paid/i.test(String((cell(sc + r) || {}).v || ''))).length;
+  let total = 0, tf = null;
+  b.rows.filter(r => !b.player_rows.includes(r)).forEach(r => { const c = cell(cc + r); if (c && c.f && c.t === 'n') { total = c.v; tf = c; } });
+  if (!tf) named.forEach(r => total += num(cell(cc + r)));
+  return { n: named.length, paid, total };
+}
+
+function renderMatchMeta() {
+  sheet().layout.lineups.forEach((b, i) => {
+    const el = document.getElementById('mm' + i); if (!el) return;
+    const m = lineupMeta(b), hasStatus = m.paid > 0;
+    el.innerHTML = `<span><b>${m.n}</b> players</span><span>${money(m.total)}</span>` +
+      (hasStatus || m.n ? `<span class="bar" title="${m.paid}/${m.n} marked paid"><i style="width:${m.n ? (m.paid / m.n * 100) : 0}%"></i></span><span>${m.paid}/${m.n} paid</span>` : '');
+  });
+}
+
+function renderLineups() {
+  const L = sheet().layout; if (!L.lineups.length) return '';
+  const names = (L.players ? L.players.player_rows.map(r => (cell(L.players.name_col + r) || {}).v).filter(Boolean) : []);
+  const dl = `<datalist id="names">${[...new Set(names)].map(n => `<option value="${esc(n)}">`).join('')}</datalist>`;
+  const cards = L.lineups.map((b, i) => {
+    const [snc, pc, cc, sc] = b.cols;
+    const title = b.title_ref && cell(b.title_ref) && !cell(b.title_ref).f ? widget(b.title_ref, 'txt') : esc(b.title || 'Match');
+    const rows = b.rows.map(r => {
+      const isP = b.player_rows.includes(r);
+      if (!isP) {
+        const pv = cell(pc + r), cv = cell(cc + r), sv = cell(sc + r), nv = cell(snc + r);
+        if (!pv && !cv && !sv && !nv) return '';
+        return `<tr class="foot"><td class="sn">${esc(fmt(nv))}</td><td>${widget(pc + r, 'txt')}</td><td class="r">${widget(cc + r, 'auto')}</td><td>${sv ? widget(sc + r, 'auto') : ''}</td></tr>`;
+      }
+      return `<tr><td class="sn">${esc(fmt(cell(snc + r)))}</td><td>${widget(pc + r, 'txt', { list: 'names' })}</td><td class="r">${widget(cc + r, 'num')}</td><td class="c">${widget(sc + r, 'status')}</td></tr>`;
+    }).join('');
+    return `<div class="card mcard"><header><h3 class="title">${title}</h3><div class="meta" id="mm${i}"></div></header>
+      <table><thead><tr><th class="c">#</th><th>Player</th><th class="r">Cost</th><th class="c">Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }).join('');
+  return `<section><div class="sec-head"><h2>Match payments</h2><p>Per-match line-up and cost share. Tap the status to mark paid.</p></div>${dl}<div class="matches">${cards}</div></section>`;
+}
+
+function renderInstallments() {
+  const L = sheet().layout; if (!L.installments.length) return '';
+  return L.installments.map(t => {
+    const head = t.cols.map((c, i) => `<th class="${i < 2 ? '' : 'r'}">${esc(t.headers[i] || 'Notes')}</th>`).join('');
+    const body = t.rows.map(r => '<tr>' + t.cols.map((col, i) => {
+      const h = t.headers[i] || '', ref = col + r;
+      if (i === 0) return `<td class="c" style="color:var(--ink-3);font-size:12px">${esc(fmt(cell(ref)))}</td>`;
+      if (/status/i.test(h)) return `<td class="c">${widget(ref, 'status')}</td>`;
+      if (/^dt|date/i.test(h)) return `<td>${widget(ref, 'date')}</td>`;
+      if (i === 1 || !h) return `<td>${widget(ref, 'auto', { fallback: 'txt' })}</td>`;
+      return `<td class="r">${widget(ref, 'auto', { sign: /balance/i.test(h) })}</td>`;
+    }).join('') + '</tr>').join('');
+    return `<section><div class="sec-head"><h2>Instalments</h2><p>Tournament fee instalments per player.</p></div>
+      <div class="card scroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></section>`;
+  }).join('');
+}
+
+function renderLedger() {
+  const L = sheet().layout; if (!L.ledger.length) return '';
+  const cards = L.ledger.map(b => `<div class="card scroll"><table><tbody>${b.rows.map(r => {
+    const cells = b.cols.map(col => cell(col + r));
+    if (cells.every(c => !c)) return '';
+    return '<tr>' + b.cols.map((col, i) => {
+      const c = cell(col + r);
+      const isLabel = c && c.t === 's' && !c.f;
+      return `<td class="${isLabel ? '' : 'r'}" style="${isLabel ? 'font-weight:600' : ''}">${widget(col + r, 'auto', { fallback: i === 0 ? 'txt' : 'num' })}</td>`;
+    }).join('') + '</tr>';
+  }).join('')}</tbody></table></div>`).join('');
+  return `<section><div class="sec-head"><h2>Accounts &amp; notes</h2><p>Organiser payments, kitty and other totals from the sheet.</p></div><div class="ledger">${cards}</div></section>`;
+}
+
+function render() {
+  const s = sheet(), info = s.layout.info;
+  const facts = info ? info.facts : [];
+  const t = facts.find(f => /tournament/i.test(f.k)), g = facts.find(f => /ground/i.test(f.k));
+  const rest = facts.filter(f => f !== t && f !== g && f.v);
+  $('#main').innerHTML = `
+    <div class="hero">
+      <h1>${esc(t ? t.v : s.name)}</h1>
+      <div class="sub">${esc(s.name)}${g ? ' · ' + esc(g.v) : ''}</div>
+      ${rest.length ? `<div class="facts">${rest.map(f => `<span class="fact">${esc(f.k)}: <b>${esc(f.v)}</b></span>`).join('')}</div>` : ''}
+      <div class="kpis" id="kpis"></div>
+    </div>
+    ${renderPlayers()}${renderLineups()}${renderInstallments()}${renderLedger()}`;
+  renderKpis(); renderMatchMeta(); applyFilter();
+}
+
+/* ---------------- saving ---------------- */
+function save(changes) {
+  const sh = sheet().name;
+  // optimistic local update
+  changes.forEach(ch => {
+    const v = ch.value;
+    if (v === '' || v === null) delete DATA.sheets[cur].cells[ch.ref];
+    else DATA.sheets[cur].cells[ch.ref] = { t: /^-?\d+(\.\d+)?$/.test(String(v).replace(/,/g, '')) ? 'n' : /^\d{4}-\d{2}-\d{2}$/.test(v) ? 'd' : 's', v: /^-?\d+(\.\d+)?$/.test(String(v).replace(/,/g, '')) ? Number(String(v).replace(/,/g, '')) : v };
+  });
+  pending++; setSync('saving', 'Saving to Excel…');
+  const idx = cur;
+  chain = chain.then(() => fetch('/api/cells', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'X-cricpay': '1' },
+    body: JSON.stringify({ sheet: sh, changes })
+  }).then(async r => {
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error(j.error || 'Save failed'), { code: r.status });
+    DATA.sheets[idx] = j.sheet; version = j.version; DATA.saved_at = j.saved_at;
+    if (idx === cur) refreshWidgets();
+  }).catch(e => {
+    toast(e.message, true);
+    if (e.code === 401) { location.href = '/login'; }
+    return reload(true);
+  }).finally(() => { pending--; if (!pending) syncIdle(); }));
+}
+
+document.addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (tab) { cur = +tab.dataset.i; store.lset('tab', cur); renderTabs(); render(); updateLock(); window.scrollTo({ top: 0 }); return; }
+  const chip = e.target.closest('.chip[data-mode]');
+  if (chip) { filter.mode = chip.dataset.mode; document.querySelectorAll('.chip[data-mode]').forEach(c => c.classList.toggle('on', c === chip)); applyFilter(); return; }
+  const b = e.target.closest('button[data-ref]');
+  if (b && !b.disabled) {
+    const c = cell(b.dataset.ref), v = String((c && c.v) || '').toLowerCase();
+    let nv;
+    if (b.dataset.kind === 'yn') nv = v === '' ? 'Yes' : v === 'yes' ? 'No' : '';
+    else nv = /paid/.test(v) ? '' : 'Paid';
+    save([{ ref: b.dataset.ref, value: nv }]);
+    refreshWidgets();
+  }
+});
+document.addEventListener('focusin', e => {
+  const el = e.target;
+  if (el.matches('input.in.num') && !el.readOnly) { el.value = el.dataset.raw; requestAnimationFrame(() => el.select()); }
+});
+document.addEventListener('focusout', e => {
+  const el = e.target;
+  if (!el.matches('input.in') || el.readOnly) return;
+  const nv = el.value.trim(), old = String(el.dataset.raw ?? '');
+  const same = el.dataset.kind === 'num' ? (nv.replace(/,/g, '') === old) : nv === old;
+  if (!same) { el.dataset.raw = nv; save([{ ref: el.dataset.ref, value: nv }]); }
+  else if (el.dataset.kind === 'num') { const c = cell(el.dataset.ref); el.value = c && c.t === 'n' ? nf.format(c.v) : old; }
+  setTimeout(refreshWidgets, 0);
+});
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input.in') && e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
+  if (e.target.matches('input.in') && e.key === 'Escape') { const el = e.target; el.value = el.dataset.raw; el.blur(); }
+});
+document.addEventListener('input', e => { if (e.target.id === 'q') { filter.q = e.target.value; applyFilter(); } });
+
+/* ---------------- access (from the signed-in account) ---------------- */
+function updateLock() {
+  const b = $('#lockBtn'); b.hidden = false; b.disabled = true; b.style.cursor = 'default';
+  const me = DATA.me || {};
+  b.innerHTML = canEdit() ? `✏️ ${esc(me.name || '')} · can edit this sheet` : `👀 ${esc(me.name || '')} · view only`;
+}
+
+/* ---------------- load & live refresh ---------------- */
+async function reload(keep) {
+  const r = await fetch('/api/data'); if (r.status === 401) { location.href = '/login'; return; } DATA = await r.json(); version = DATA.version;
+  if (!keep) { const t = +(store.lget('tab') || 0); cur = t < DATA.sheets.length ? t : 0; }
+  $('#fileName').textContent = DATA.file;
+  renderTabs(); render(); updateLock(); syncIdle();
+}
+setInterval(async () => {
+  if (document.hidden || pending || (document.activeElement && document.activeElement.matches('input.in'))) return;
+  try {
+    const r = await fetch('/api/version'); if (r.status === 401) { location.href = '/login'; return; } const j = await r.json();
+    if (j.version !== version) { const y = window.scrollY; await reload(true); window.scrollTo(0, y); toast('Updated with latest changes from Excel'); }
+  } catch (e) { setSync('err', 'Offline, retrying…'); }
+}, 30000);
+reload().catch(() => { $('#main').innerHTML = '<div class="empty">Could not load the tracker. Is the server running?</div>'; setSync('err', 'Not connected'); });
+})();
+</script>
+</body>
+</html>

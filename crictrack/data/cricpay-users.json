@@ -1,0 +1,136 @@
+{
+  "users": [
+    {
+      "username": "suhail",
+      "name": "Suhail Ahmed",
+      "role": "admin",
+      "status": "active",
+      "access": {},
+      "note": "",
+      "created": "2026-10-25T07:43:47",
+      "last_login": "2026-11-19T11:50:09",
+      "salt": "11ca8e48220a6b37a67099ab0c73f13d",
+      "pw": "80058cb7e89979ed172dc439511a67387c26f86bd404ba8920e6eac50aa2e6a5",
+      "sv": "67e1f2a9"
+    },
+    {
+      "username": "shiva",
+      "name": "Shiva Rama Rao",
+      "role": "member",
+      "status": "active",
+      "access": {
+        "UCC - SRT20 CPL": "captain",
+        "BRC-Rebelstars": "player",
+        "Driplomats - GurukulMarvel": "player",
+        "UCC - MRR Night": "captain",
+        "Driplomats - UrbanFarms": "player",
+        "BRC-Rebelstars E151": "player"
+      },
+      "created": "2026-10-25T07:45:08",
+      "last_login": "2026-11-18T08:12:39",
+      "salt": "a6626a15dc683e5abbae5a731f3ad0b9",
+      "pw": "209af3275af68b2722fb744cee24c30471f69e68e72e79a0060477304d11cea0",
+      "sv": "c2eeaf5e"
+    },
+    {
+      "username": "budugu",
+      "name": "Phani",
+      "role": "member",
+      "status": "active",
+      "access": {
+        "Driplomats - UrbanFarms": "player"
+      },
+      "note": "DRIPLOMATS",
+      "created": "2026-10-25T07:51:58",
+      "last_login": "2026-10-25T16:01:50",
+      "salt": "c921c16861f66049f5ce08fb3d8a4bf8",
+      "pw": "762f67b27ebc360053d94c3760aec4b8424bba716ecdfade662d92c5744840ea",
+      "sv": "69197134"
+    },
+    {
+      "username": "hari",
+      "name": "Hari",
+      "role": "member",
+      "status": "active",
+      "access": {
+        "BRC-Rebelstars E151": "captain"
+      },
+      "note": "BRC E151",
+      "created": "2026-10-25T13:46:29",
+      "last_login": "2026-10-25T13:50:46",
+      "salt": "adf1818cb9beed2e1e7d1e1e8ef7176d",
+      "pw": "fa5475bc1e0716cc8396931f2e7db0b5c3aa0e127924884ce471badadaa7245d",
+      "sv": "b2ff6463"
+    },
+    {
+      "username": "harsha305",
+      "name": "Harsha",
+      "role": "member",
+      "status": "active",
+      "access": {
+        "BRC-Rebelstars E151": "player",
+        "BRC-Rebelstars": "player",
+        "Driplomats - GurukulMarvel": "player",
+        "Driplomats - UrbanFarms": "player"
+      },
+      "note": "Driplomats, BRC Blasters",
+      "created": "2026-10-25T13:46:52",
+      "last_login": "2026-10-25T13:48:20",
+      "salt": "8499d7db4a58e46140b326b39fc43fb8",
+      "pw": "41f294f96637e514a45340514c663348fac93d3c70de40bc7c78b8f6a7ab3ab2",
+      "sv": "97a3a284"
+    },
+    {
+      "username": "rajasekhar",
+      "name": "Rajasekhar A",
+      "role": "member",
+      "status": "active",
+      "access": {
+        "Driplomats - GurukulMarvel": "player",
+        "Driplomats - UrbanFarms": "player",
+        "UCC - SRT20 CPL": "player"
+      },
+      "note": "Empyrean XI",
+      "created": "2026-10-25T14:23:34",
+      "last_login": "2026-10-25T14:25:29",
+      "salt": "72ecc300e40fc3aa5b1eb71d8cd05adc",
+      "pw": "7392cf22653043d87dccf2b8c9ec2763a5abc4f3bacbeca048f55eab905d5de6",
+      "sv": "5349fa14"
+    },
+    {
+      "username": "lakshman",
+      "name": "Lakshman Kumar Singamsetti",
+      "role": "member",
+      "status": "active",
+      "access": {
+        "BRC-Rebelstars": "player",
+        "Driplomats - GurukulMarvel": "player",
+        "Driplomats - UrbanFarms": "player",
+        "BRC-Rebelstars E151": "player"
+      },
+      "note": "Driplomats, BRC Blasters, Battle Beast",
+      "created": "2026-10-25T15:32:19",
+      "last_login": "2026-10-25T15:34:23",
+      "salt": "862890cd5920b51b050fe84f5d6a278c",
+      "pw": "21c7cd6809cfceeeefd23a95bf1897036f573d5ddd6b22773226429e986cd6ea",
+      "sv": "9d3d9863"
+    },
+    {
+      "username": "gowthamnew",
+      "name": "Gowtham",
+      "role": "member",
+      "status": "active",
+      "access": {
+        "Driplomats - GurukulMarvel": "captain",
+        "UCC - SRT20 CPL": "captain"
+      },
+      "note": "90\u2019s gully legends",
+      "created": "2026-11-18T14:29:04",
+      "last_login": "2026-11-18T14:46:37",
+      "salt": "aa7af2033d257096480fe4fbc39b4c78",
+      "pw": "a4d225b23d5225493f7925a6d05e23066995fca5486b3aecc0d5401de845ba18",
+      "sv": "5e14dbd5"
+    }
+  ],
+  "allow_register": true
+}
