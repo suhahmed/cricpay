@@ -1,4 +1,4 @@
-# cricpay: cricket tournament payment tracker (Excel-backed)
+# CricTrack: cricket tournament payment tracker (Excel-backed)
 
 A web UI for `data/2025_Cricket_Tournaments.xlsx`. **There is no database: the Excel file is the database.**
 
@@ -54,7 +54,7 @@ Everyone signs in. Nothing is visible without an account.
 - **New tournaments:** admins and captains can create them. A captain who creates one becomes its captain.
 - **Audit:** each payment records who entered it, in the *Recorded by* column of the Payments and Organiser Payments sheets.
 - **Security:**
-  - Passwords are stored as salted PBKDF2 hashes in `data/cricpay-users.json`, never in Excel.
+  - Passwords are stored as salted PBKDF2 hashes in `data/crictrack-users.json`, never in Excel.
   - Sessions last 30 days.
   - Five wrong passwords lock that login for 60 seconds.
   - Changes need the app's own request header, which blocks cross-site form attacks.
@@ -122,7 +122,7 @@ ngrok's free plan gives your account **one fixed address** (like `https://someth
 1. Sign up at https://ngrok.com, then copy your **authtoken** from the dashboard (*Getting Started → Your Authtoken*).
 2. Download ngrok for macOS from https://ngrok.com/download (Apple chip = ARM64, Intel = x86-64). Unzip it so the `ngrok` file sits in **Downloads**.
 3. One time, in Terminal: `~/Downloads/ngrok config add-authtoken YOUR_TOKEN`
-4. Every time: `bash ~/Documents/cricket-tracker/start-public.sh`. This starts cricpay, keeps the Mac awake and opens the same public link. Ctrl+C stops everything.
+4. Every time: `bash ~/Documents/cricket-tracker/start-public.sh`. This starts CricTrack, keeps the Mac awake and opens the same public link. Ctrl+C stops everything.
 - Free plan limits: 20,000 requests and 1 GB a month. Open pages check for updates every 30 s, and only while visible. Visitors see a one-time ngrok "Visit site" page, which is then remembered for 7 days.
 
 ## Settings (environment variables)

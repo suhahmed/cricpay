@@ -7,8 +7,8 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#2b8452">
-<meta name="apple-mobile-web-app-title" content="cricpay">
-<title>cricpay · Sheet view</title>
+<meta name="apple-mobile-web-app-title" content="CricTrack">
+<title>CricTrack · Sheet view</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
@@ -164,7 +164,7 @@ footer{color:var(--ink-3);font-size:12px;padding:30px 0 40px;text-align:center}
 </head>
 <body>
 <div class="top"><div class="wrap">
-  <a class="btn" href="/" title="Back to cricpay">← cricpay</a><div class="brand"><span class="ball"></span>Sheet view</div>
+  <a class="btn" href="/" title="Back to CricTrack">← CricTrack</a><div class="brand"><span class="ball"></span>Sheet view</div>
   <div class="sync" id="sync"><span class="dot"></span><span class="txt" id="syncTxt">Loading…</span></div>
   <button class="btn" id="lockBtn" hidden></button>
   <a class="btn" href="/download" title="Download the Excel file">
@@ -436,7 +436,7 @@ function save(changes) {
   pending++; setSync('saving', 'Saving to Excel…');
   const idx = cur;
   chain = chain.then(() => fetch('/api/cells', {
-    method: 'POST', headers: { 'Content-Type': 'application/json', 'X-cricpay': '1' },
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CricTrack': '1' },
     body: JSON.stringify({ sheet: sh, changes })
   }).then(async r => {
     const j = await r.json().catch(() => ({}));

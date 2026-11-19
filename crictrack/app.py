@@ -43,7 +43,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 XLSX = os.path.abspath(os.environ.get(
     "TRACKER_XLSX", os.path.join(BASE, "data", "2025_Cricket_Tournaments.xlsx")))
 EDIT_PIN = os.environ.get("EDIT_PIN", "").strip()
-SETTINGS_FILE = os.path.join(os.path.dirname(XLSX), "cricpay-settings.json")
+SETTINGS_FILE = os.path.join(os.path.dirname(XLSX), "crictrack-settings.json")
 _fails = {}   # ip -> [count, locked_until]
 
 
@@ -1717,7 +1717,7 @@ def _err(e):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8000"))
     _load(force=True)
-    print(f"\n  cricpay running        ->  http://localhost:{port}")
+    print(f"\n  CricTrack running        ->  http://localhost:{port}")
     print(f"  Excel file               ->  {XLSX}")
     print("  Accounts                 ->  sign in at /login (first account = admin)\n")
     try:

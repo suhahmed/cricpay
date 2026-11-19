@@ -7,8 +7,8 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#2b8452">
-<meta name="apple-mobile-web-app-title" content="cricpay">
-<title>cricpay · Sign in</title>
+<meta name="apple-mobile-web-app-title" content="CricTrack">
+<title>CricTrack · Sign in</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -73,7 +73,7 @@ input:focus{outline:2px solid var(--green);outline-offset:1px;border-color:var(-
 <body>
 <div class="wrap">
   <section class="turf">
-    <div class="logo"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" fill="#d64b3b"/><path d="M8.2 4.3c2.2 4.6 2.2 10.8 0 15.4M15.8 4.3c-2.2 4.6-2.2 10.8 0 15.4" stroke="#fff" stroke-width="1.3" stroke-dasharray="1.6 1.4" stroke-linecap="round"/></svg>cricpay</div>
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" fill="#d64b3b"/><path d="M8.2 4.3c2.2 4.6 2.2 10.8 0 15.4M15.8 4.3c-2.2 4.6-2.2 10.8 0 15.4" stroke="#fff" stroke-width="1.3" stroke-dasharray="1.6 1.4" stroke-linecap="round"/></svg>CricTrack</div>
     <h1>Every match. Every rupee.</h1>
     <p>Tournament fees, advances and organiser payments for the team, all in one place.</p>
     <ul>
@@ -146,7 +146,7 @@ function tab(t) {
 document.addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (b) { e.preventDefault(); tab(b.dataset.t); } });
 
 async function post(url, body) {
-  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-cricpay': '1' }, body: JSON.stringify(body) });
+  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CricTrack': '1' }, body: JSON.stringify(body) });
   const j = await r.json().catch(() => ({ error: 'Server error' }));
   if (!r.ok) throw new Error(j.error || 'Something went wrong');
   return j;

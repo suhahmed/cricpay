@@ -1,5 +1,5 @@
 """
-cricpay account recovery from the command line (e.g. a PythonAnywhere Bash console).
+CricTrack account recovery from the command line (e.g. a PythonAnywhere Bash console).
 
   python manage_users.py list
   python manage_users.py reset-password <username>        # asks for the new password
@@ -18,8 +18,8 @@ import auth  # noqa: E402
 
 DATA = (os.path.dirname(os.path.abspath(os.environ["TRACKER_XLSX"])) if os.environ.get("TRACKER_XLSX")
         else os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
-auth._cfg.update(users_file=os.path.join(DATA, "cricpay-users.json"),
-                 settings_file=os.path.join(DATA, "cricpay-settings.json"))
+auth._cfg.update(users_file=os.path.join(DATA, "crictrack-users.json"),
+                 settings_file=os.path.join(DATA, "crictrack-settings.json"))
 
 
 def ask_password():

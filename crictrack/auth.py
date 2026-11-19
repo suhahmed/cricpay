@@ -1,5 +1,5 @@
 """
-cricpay accounts: register / login / roles / per-tournament access.
+CricTrack accounts: register / login / roles / per-tournament access.
 
 Roles
   admin    the whole website: every tournament (read + write), "All tournaments" overview,
@@ -12,8 +12,8 @@ A user record:  role = "admin" | "member",  access = {"<sheet name>": "captain" 
 * Everything needs a signed-in, active user.
 * New sign-ups are "pending" until an admin or a captain gives them access to a tournament.
 * The very first account becomes the admin. If an edit PIN was set before
-  (data/cricpay-settings.json), that PIN is required to create it.
-* Users live in data/cricpay-users.json; passwords are salted PBKDF2 hashes.
+  (data/crictrack-settings.json), that PIN is required to create it.
+* Users live in data/crictrack-users.json; passwords are salted PBKDF2 hashes.
 """
 import datetime as dt
 import hashlib
@@ -263,14 +263,14 @@ def _clean_access(raw, allowed_sheets, allowed_roles):
 # wiring
 # --------------------------------------------------------------------------- #
 def init(app, data_dir, static_dir, sheets_fn):
-    _cfg.update(users_file=os.path.join(data_dir, "cricpay-users.json"),
-                settings_file=os.path.join(data_dir, "cricpay-settings.json"), sheets=sheets_fn)
+    _cfg.update(users_file=os.path.join(data_dir, "crictrack-users.json"),
+                settings_file=os.path.join(data_dir, "crictrack-settings.json"), sheets=sheets_fn)
     st = _read_json(_cfg["settings_file"], {})
     if not st.get("secret_key"):
         st["secret_key"] = secrets.token_hex(32)
         _write_json(_cfg["settings_file"], st)
     app.secret_key = st["secret_key"]
-    app.config.update(SESSION_COOKIE_NAME="cricpay", SESSION_COOKIE_HTTPONLY=True,
+    app.config.update(SESSION_COOKIE_NAME="crictrack", SESSION_COOKIE_HTTPONLY=True,
                       SESSION_COOKIE_SAMESITE="Lax",
                       SESSION_COOKIE_SECURE=os.environ.get("SECURE_COOKIES", "") == "1",
                       PERMANENT_SESSION_LIFETIME=dt.timedelta(days=30))
@@ -278,7 +278,7 @@ def init(app, data_dir, static_dir, sheets_fn):
     @app.before_request
     def _guard():
         p = request.path
-        if request.method in ("POST", "PUT", "PATCH", "DELETE") and request.headers.get("X-cricpay") != "1":
+        if request.method in ("POST", "PUT", "PATCH", "DELETE") and request.headers.get("X-CricTrack") != "1":
             abort(403, "Request blocked (missing app header).")       # CSRF protection
         g.user = None
         uname = session.get("u")

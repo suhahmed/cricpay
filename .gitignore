@@ -1,3 +1,45 @@
-.DS_Store
+# ---- CricPay: never commit live data or secrets ----
+# Excel workbook, user accounts (password hashes), settings and backups
+data/
+*.xlsx
+*.xls
+*.xlsm
+~$*.xlsx
+crictrack-users.json
+crictrack-settings.json
+backups/
+ 
+# Environment / secrets
 .env
+.env.*
+*.pem
+*.key
+ 
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+.virtualenvs/
+ 
+# Packaged copies and archives
 *.zip
+*.tar.gz
+ 
+# Tunnels / local tools
+ngrok
+ngrok.exe
+*.log
+ 
+# Editors and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+.viminfo
+ 
